@@ -191,6 +191,7 @@ public class StatsEffectListener implements Listener {
         if (stats.get(StatType.AGILITY) >= 10 && player.getGameMode() == GameMode.SURVIVAL) {
             if (player.isOnGround()) {
                 player.setAllowFlight(true);
+                jumped.put(player.getUniqueId(), false);
             }
         }
     }
@@ -201,6 +202,7 @@ public class StatsEffectListener implements Listener {
         PlayerStats stats = PlayerDataManager.get(player.getUniqueId()).getStats();
         if (stats.get(StatType.AGILITY) >= 10 && player.getGameMode() == GameMode.SURVIVAL) {
             if (!jumped.getOrDefault(player.getUniqueId(), false)) {
+                float fall = player.getFallDistance();
                 event.setCancelled(true);
                 long now = System.currentTimeMillis();
                 long last = lastJumpTime.getOrDefault(player.getUniqueId(), 0L);
@@ -212,6 +214,7 @@ public class StatsEffectListener implements Listener {
                 double ratio = Math.min(1.0, (now - last) / (double) cd);
 
                 player.setAllowFlight(false);
+                player.setFlying(false);
                 // Apply forward dash with jump
                 double speed = 1.2;
                 if (agi >= 11) speed = 1.4;
@@ -229,6 +232,7 @@ public class StatsEffectListener implements Listener {
 
                 jumped.put(player.getUniqueId(), true);
                 lastJumpTime.put(player.getUniqueId(), now);
+                player.setFallDistance(fall);
             }
         }
     }
@@ -278,11 +282,8 @@ public class StatsEffectListener implements Listener {
             PlayerStats stats = PlayerDataManager.get(player.getUniqueId()).getStats();
             int vit = stats.get(StatType.VITALITY);
             int agi = stats.get(StatType.AGILITY);
-            if (agi >= 14 && event.getCause() == EntityDamageEvent.DamageCause.FALL) {
-                if (jumped.getOrDefault(player.getUniqueId(), false)) {
-                    event.setDamage(event.getDamage() * 0.7);
-                    jumped.put(player.getUniqueId(), false);
-                }
+            if (event.getCause() == EntityDamageEvent.DamageCause.FALL) {
+                jumped.put(player.getUniqueId(), false);
             }
             if (vit >= 14) {
                 switch (event.getCause()) {
