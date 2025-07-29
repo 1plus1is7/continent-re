@@ -6,6 +6,11 @@ import me.continent.nation.NationManager;
 import me.continent.nation.Nation;
 import me.continent.economy.CentralBank;
 import me.continent.nation.service.MaintenanceService;
+import me.continent.player.PlayerData;
+import me.continent.player.PlayerDataManager;
+import me.continent.stat.PlayerStats;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
@@ -34,6 +39,9 @@ public class AdminCommand implements TabExecutor {
             sender.sendMessage("§e/admin maintenance setcost <값> §7- 기본 유지비 설정");
             sender.sendMessage("§e/admin maintenance setperchunk <값> §7- 청크당 비용 설정");
             sender.sendMessage("§e/admin maintenance setlimit <값> §7- 미납 한도 설정");
+            sender.sendMessage("§e/admin stat add <플레이어> <수량> §7- 스탯 포인트 지급");
+            sender.sendMessage("§e/admin stat remove <플레이어> <수량> §7- 스탯 포인트 차감");
+            sender.sendMessage("§e/admin stat set <플레이어> <수량> §7- 스탯 포인트 설정");
             return true;
         }
 
@@ -176,6 +184,38 @@ public class AdminCommand implements TabExecutor {
             return true;
         }
 
+        if (args[0].equalsIgnoreCase("stat")) {
+            if (args.length < 4) {
+                sender.sendMessage("§c사용법: /admin stat <add|remove|set> <플레이어> <수량>");
+                return true;
+            }
+            OfflinePlayer target = Bukkit.getOfflinePlayer(args[2]);
+            PlayerData data = PlayerDataManager.get(target.getUniqueId());
+            PlayerStats stats = data.getStats();
+            try {
+                int amount = Integer.parseInt(args[3]);
+                if (args[1].equalsIgnoreCase("add")) {
+                    stats.addPoints(amount);
+                    PlayerDataManager.save(target.getUniqueId());
+                    sender.sendMessage("§e" + target.getName() + "§f의 포인트를 +" + amount + " 만큼 지급했습니다. (현재 " + stats.getUnusedPoints() + ")");
+                } else if (args[1].equalsIgnoreCase("remove")) {
+                    int newVal = stats.getUnusedPoints() - amount;
+                    stats.setPoints(newVal);
+                    PlayerDataManager.save(target.getUniqueId());
+                    sender.sendMessage("§e" + target.getName() + "§f의 포인트를 -" + amount + " 만큼 차감했습니다. (현재 " + stats.getUnusedPoints() + ")");
+                } else if (args[1].equalsIgnoreCase("set")) {
+                    stats.setPoints(amount);
+                    PlayerDataManager.save(target.getUniqueId());
+                    sender.sendMessage("§e" + target.getName() + "§f의 포인트를 " + stats.getUnusedPoints() + " 로 설정했습니다.");
+                } else {
+                    sender.sendMessage("§c사용법: /admin stat <add|remove|set> <플레이어> <수량>");
+                }
+            } catch (NumberFormatException e) {
+                sender.sendMessage("§c수량은 숫자여야 합니다.");
+            }
+            return true;
+        }
+
         sender.sendMessage("§c알 수 없는 하위 명령어입니다.");
         return true;
     }
@@ -183,7 +223,7 @@ public class AdminCommand implements TabExecutor {
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         if (args.length == 1) {
-            return Arrays.asList("war", "rate", "maintenance").stream()
+            return Arrays.asList("war", "rate", "maintenance", "stat").stream()
                     .filter(s -> s.startsWith(args[0].toLowerCase()))
                     .toList();
         }
@@ -224,6 +264,19 @@ public class AdminCommand implements TabExecutor {
         if (args.length == 2 && args[0].equalsIgnoreCase("maintenance")) {
             return Arrays.asList("get", "setcost", "setperchunk", "setlimit").stream()
                     .filter(s -> s.startsWith(args[1].toLowerCase()))
+                    .toList();
+        }
+
+        if (args.length == 2 && args[0].equalsIgnoreCase("stat")) {
+            return Arrays.asList("add", "remove", "set").stream()
+                    .filter(s -> s.startsWith(args[1].toLowerCase()))
+                    .toList();
+        }
+
+        if (args.length == 3 && args[0].equalsIgnoreCase("stat")) {
+            return Bukkit.getOnlinePlayers().stream()
+                    .map(org.bukkit.entity.Player::getName)
+                    .filter(n -> n.toLowerCase().startsWith(args[2].toLowerCase()))
                     .toList();
         }
 
