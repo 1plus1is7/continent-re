@@ -284,6 +284,13 @@ public class StatsEffectListener implements Listener {
             int agi = stats.get(StatType.AGILITY);
             if (event.getCause() == EntityDamageEvent.DamageCause.FALL) {
                 jumped.put(player.getUniqueId(), false);
+                if (agi >= 10) {
+                    float dist = player.getFallDistance();
+                    double computed = Math.max(0, dist - 3.0);
+                    if (computed > event.getDamage()) {
+                        event.setDamage(computed);
+                    }
+                }
             }
             if (vit >= 14) {
                 switch (event.getCause()) {
