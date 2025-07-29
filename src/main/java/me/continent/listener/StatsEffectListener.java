@@ -69,7 +69,14 @@ public class StatsEffectListener implements Listener {
 
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
-        StatsManager.applyStats(event.getPlayer());
+        Player player = event.getPlayer();
+        StatsManager.applyStats(player);
+        PlayerStats stats = PlayerDataManager.get(player.getUniqueId()).getStats();
+        if (stats.get(StatType.STRENGTH) >= 5) {
+            applyHaste(player, player.getInventory().getItemInMainHand());
+        } else {
+            player.removePotionEffect(org.bukkit.potion.PotionEffectType.HASTE);
+        }
     }
 
     @EventHandler
@@ -86,7 +93,16 @@ public class StatsEffectListener implements Listener {
 
     @EventHandler
     public void onRespawn(PlayerRespawnEvent event) {
-        org.bukkit.Bukkit.getScheduler().runTask(me.continent.ContinentPlugin.getInstance(), () -> StatsManager.applyStats(event.getPlayer()));
+        org.bukkit.Bukkit.getScheduler().runTask(me.continent.ContinentPlugin.getInstance(), () -> {
+            Player player = event.getPlayer();
+            StatsManager.applyStats(player);
+            PlayerStats stats = PlayerDataManager.get(player.getUniqueId()).getStats();
+            if (stats.get(StatType.STRENGTH) >= 5) {
+                applyHaste(player, player.getInventory().getItemInMainHand());
+            } else {
+                player.removePotionEffect(org.bukkit.potion.PotionEffectType.HASTE);
+            }
+        });
     }
 
     @EventHandler
