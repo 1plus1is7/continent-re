@@ -161,7 +161,18 @@ public class StatsEffectListener implements Listener {
 
                 event.setCancelled(true);
                 player.setAllowFlight(false);
-                player.setVelocity(player.getLocation().getDirection().multiply(0.1).setY(0.6));
+                // Apply forward dash with jump
+                double speed = 1.2;
+                if (agi >= 11) speed = 1.4;
+                if (agi >= 12) speed = 1.6;
+                if (agi >= 13) speed = 1.8;
+                Vector dir = player.getLocation().getDirection().setY(0).normalize().multiply(speed).setY(0.6);
+                player.setVelocity(dir);
+
+                // Dust effect and wind sound
+                player.getWorld().spawnParticle(org.bukkit.Particle.CLOUD, player.getLocation(), 20, 0.3, 0.1, 0.3, 0);
+                player.playSound(player.getLocation(), Sound.ITEM_ELYTRA_FLYING, 1f, 1f);
+
                 jumped.put(player.getUniqueId(), true);
                 lastJumpTime.put(player.getUniqueId(), now);
             }
@@ -175,7 +186,7 @@ public class StatsEffectListener implements Listener {
         if (stats.get(StatType.AGILITY) >= 10 && player.getGameMode() == GameMode.SURVIVAL && event.isSprinting()) {
             long now = System.currentTimeMillis();
             long lastTap = lastSprint.getOrDefault(player.getUniqueId(), 0L);
-            if (now - lastTap < 300) {
+            if (now - lastTap < 600) {
                 long cd = dashCooldown.getOrDefault(player.getUniqueId(), 0L);
                 if (now - cd > 2000) {
                     dashCooldown.put(player.getUniqueId(), now);
