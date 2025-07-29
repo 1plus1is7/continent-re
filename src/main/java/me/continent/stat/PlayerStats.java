@@ -39,6 +39,14 @@ public class PlayerStats {
         return unusedPoints;
     }
 
+    /**
+     * Sets the number of unused stat points the player currently has.
+     * Negative values are clamped to zero.
+     */
+    public void setPoints(int amount) {
+        this.unusedPoints = Math.max(0, amount);
+    }
+
     public void addPoints(int amount) {
         this.unusedPoints += amount;
     }
