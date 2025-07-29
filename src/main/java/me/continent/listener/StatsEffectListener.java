@@ -281,9 +281,8 @@ public class StatsEffectListener implements Listener {
             int agi = stats.get(StatType.AGILITY);
             if (agi >= 14 && event.getCause() == EntityDamageEvent.DamageCause.FALL) {
                 if (jumped.getOrDefault(player.getUniqueId(), false)) {
-                    event.setCancelled(true);
+                    event.setDamage(event.getDamage() * 0.7);
                     jumped.put(player.getUniqueId(), false);
-                    return;
                 }
             }
             if (vit >= 14) {
@@ -292,7 +291,7 @@ public class StatsEffectListener implements Listener {
                     default -> {}
                 }
             }
-            if (vit >= 10 && Math.random() < 0.3) {
+            if (vit >= 10 && Math.random() < 0.3 && event.getCause() != EntityDamageEvent.DamageCause.FALL) {
                 event.setCancelled(true);
                 player.sendActionBar("§e[Stat] 피해가 무시되었습니다!");
             }
