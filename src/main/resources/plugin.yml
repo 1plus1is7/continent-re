@@ -43,4 +43,4 @@ commands:
     usage: /job <subcommand>
   stat:
     description: Player stat management
-    usage: /stat <add>
+    usage: /stat <add|remove|reset>

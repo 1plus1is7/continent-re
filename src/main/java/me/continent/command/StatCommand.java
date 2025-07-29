@@ -28,9 +28,13 @@ public class StatCommand implements TabExecutor {
             for (StatType type : StatType.values()) {
                 player.sendMessage("§e" + type.name() + ": §f" + stats.get(type));
             }
+            if (stats.getMastery() != null) {
+                player.sendMessage("§e마스터리: §f" + stats.getMastery().name());
+            }
             player.sendMessage("남은 포인트: " + stats.getUnusedPoints());
             return true;
         }
+
         if (args[0].equalsIgnoreCase("add") && args.length >= 2) {
             if (stats.getUnusedPoints() <= 0) {
                 player.sendMessage("§c사용 가능한 포인트가 없습니다.");
@@ -61,15 +65,40 @@ public class StatCommand implements TabExecutor {
             }
             return true;
         }
+
+        if (args[0].equalsIgnoreCase("remove") && args.length >= 2) {
+            try {
+                StatType type = StatType.valueOf(args[1].toUpperCase(Locale.ROOT));
+                if (stats.refundPoint(type)) {
+                    PlayerDataManager.save(player.getUniqueId());
+                    player.sendMessage("§a" + type.name() + " -1 (" + stats.get(type) + ")");
+                    me.continent.stat.StatsManager.applyStats(player);
+                } else {
+                    player.sendMessage("§c해당 스탯에 투자된 포인트가 없습니다.");
+                }
+            } catch (IllegalArgumentException e) {
+                player.sendMessage("§c잘못된 스탯입니다.");
+            }
+            return true;
+        }
+
+        if (args[0].equalsIgnoreCase("reset")) {
+            stats.resetAll();
+            PlayerDataManager.save(player.getUniqueId());
+            me.continent.stat.StatsManager.applyStats(player);
+            player.sendMessage("§a스탯을 초기화했습니다. 사용 가능한 포인트: " + stats.getUnusedPoints());
+            return true;
+        }
+
         return false;
     }
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
         if (args.length == 1) {
-            return List.of("add");
+            return List.of("add", "remove", "reset");
         }
-        if (args.length == 2 && args[0].equalsIgnoreCase("add")) {
+        if (args.length == 2 && (args[0].equalsIgnoreCase("add") || args[0].equalsIgnoreCase("remove"))) {
             List<String> list = new ArrayList<>();
             for (StatType type : StatType.values()) list.add(type.name().toLowerCase(Locale.ROOT));
             return list;

@@ -191,7 +191,6 @@ public class StatsEffectListener implements Listener {
         if (stats.get(StatType.AGILITY) >= 10 && player.getGameMode() == GameMode.SURVIVAL) {
             if (player.isOnGround()) {
                 player.setAllowFlight(true);
-                jumped.put(player.getUniqueId(), false);
             }
         }
     }
