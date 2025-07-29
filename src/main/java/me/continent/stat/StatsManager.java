@@ -12,14 +12,16 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.Color;
+import org.bukkit.NamespacedKey;
+import org.bukkit.inventory.EquipmentSlotGroup;
 
 public class StatsManager {
 
-    private static final java.util.UUID STR_DAMAGE_UUID = java.util.UUID.fromString("00000000-0000-0000-0000-000000000001");
-    private static final java.util.UUID AGI_SPEED_UUID = java.util.UUID.fromString("00000000-0000-0000-0000-000000000002");
-    private static final java.util.UUID VIT_HEALTH_UUID = java.util.UUID.fromString("00000000-0000-0000-0000-000000000003");
-    private static final java.util.UUID STR_ATTACK_SPEED_UUID = java.util.UUID.fromString("00000000-0000-0000-0000-000000000004");
-    private static final java.util.UUID STR_KNOCKBACK_UUID = java.util.UUID.fromString("00000000-0000-0000-0000-000000000005");
+    private static final NamespacedKey STR_DAMAGE_KEY = new NamespacedKey(ContinentPlugin.getInstance(), "str_damage");
+    private static final NamespacedKey AGI_SPEED_KEY = new NamespacedKey(ContinentPlugin.getInstance(), "agi_speed");
+    private static final NamespacedKey VIT_HEALTH_KEY = new NamespacedKey(ContinentPlugin.getInstance(), "vit_health");
+    private static final NamespacedKey STR_ATTACK_SPEED_KEY = new NamespacedKey(ContinentPlugin.getInstance(), "str_attack_speed");
+    private static final NamespacedKey STR_KNOCKBACK_KEY = new NamespacedKey(ContinentPlugin.getInstance(), "str_knockback");
 
     public static void checkLevelUp(Player player) {
         PlayerData data = PlayerDataManager.get(player.getUniqueId());
@@ -79,45 +81,45 @@ public class StatsManager {
 
         var damageAttr = player.getAttribute(org.bukkit.attribute.Attribute.ATTACK_DAMAGE);
         if (damageAttr != null) {
-            damageAttr.getModifiers().stream().filter(m -> m.getUniqueId().equals(STR_DAMAGE_UUID)).forEach(damageAttr::removeModifier);
+            damageAttr.getModifiers().stream().filter(m -> STR_DAMAGE_KEY.equals(m.getKey())).forEach(damageAttr::removeModifier);
             double bonus = 0.05 * str + Math.min(3, Math.max(0, str - 10));
             if (bonus != 0) {
-                damageAttr.addTransientModifier(new org.bukkit.attribute.AttributeModifier(STR_DAMAGE_UUID, "stat_strength", bonus, org.bukkit.attribute.AttributeModifier.Operation.ADD_NUMBER));
+                damageAttr.addTransientModifier(new org.bukkit.attribute.AttributeModifier(STR_DAMAGE_KEY, bonus, org.bukkit.attribute.AttributeModifier.Operation.ADD_NUMBER, EquipmentSlotGroup.ANY));
             }
         }
 
         var knockAttr = player.getAttribute(org.bukkit.attribute.Attribute.ATTACK_KNOCKBACK);
         if (knockAttr != null) {
-            knockAttr.getModifiers().stream().filter(m -> m.getUniqueId().equals(STR_KNOCKBACK_UUID)).forEach(knockAttr::removeModifier);
+            knockAttr.getModifiers().stream().filter(m -> STR_KNOCKBACK_KEY.equals(m.getKey())).forEach(knockAttr::removeModifier);
             if (str >= 14) {
-                knockAttr.addTransientModifier(new org.bukkit.attribute.AttributeModifier(STR_KNOCKBACK_UUID, "stat_knockback", 1.0, org.bukkit.attribute.AttributeModifier.Operation.ADD_NUMBER));
+                knockAttr.addTransientModifier(new org.bukkit.attribute.AttributeModifier(STR_KNOCKBACK_KEY, 1.0, org.bukkit.attribute.AttributeModifier.Operation.ADD_NUMBER, EquipmentSlotGroup.ANY));
             }
         }
 
         var attackSpeedAttr = player.getAttribute(org.bukkit.attribute.Attribute.ATTACK_SPEED);
         if (attackSpeedAttr != null) {
-            attackSpeedAttr.getModifiers().stream().filter(m -> m.getUniqueId().equals(STR_ATTACK_SPEED_UUID)).forEach(attackSpeedAttr::removeModifier);
+            attackSpeedAttr.getModifiers().stream().filter(m -> STR_ATTACK_SPEED_KEY.equals(m.getKey())).forEach(attackSpeedAttr::removeModifier);
             if (str >= 10) {
                 // High value effectively removes cooldown
-                attackSpeedAttr.addTransientModifier(new org.bukkit.attribute.AttributeModifier(STR_ATTACK_SPEED_UUID, "stat_attack_speed", 4.0, org.bukkit.attribute.AttributeModifier.Operation.ADD_NUMBER));
+                attackSpeedAttr.addTransientModifier(new org.bukkit.attribute.AttributeModifier(STR_ATTACK_SPEED_KEY, 4.0, org.bukkit.attribute.AttributeModifier.Operation.ADD_NUMBER, EquipmentSlotGroup.ANY));
             }
         }
 
         var moveAttr = player.getAttribute(org.bukkit.attribute.Attribute.MOVEMENT_SPEED);
         if (moveAttr != null) {
-            moveAttr.getModifiers().stream().filter(m -> m.getUniqueId().equals(AGI_SPEED_UUID)).forEach(moveAttr::removeModifier);
+            moveAttr.getModifiers().stream().filter(m -> AGI_SPEED_KEY.equals(m.getKey())).forEach(moveAttr::removeModifier);
             double bonus = 0.05 * agi;
             if (bonus != 0) {
-                moveAttr.addTransientModifier(new org.bukkit.attribute.AttributeModifier(AGI_SPEED_UUID, "stat_agility_speed", bonus, org.bukkit.attribute.AttributeModifier.Operation.MULTIPLY_SCALAR_1));
+                moveAttr.addTransientModifier(new org.bukkit.attribute.AttributeModifier(AGI_SPEED_KEY, bonus, org.bukkit.attribute.AttributeModifier.Operation.MULTIPLY_SCALAR_1, EquipmentSlotGroup.ANY));
             }
         }
 
         var healthAttr = player.getAttribute(org.bukkit.attribute.Attribute.MAX_HEALTH);
         if (healthAttr != null) {
-            healthAttr.getModifiers().stream().filter(m -> m.getUniqueId().equals(VIT_HEALTH_UUID)).forEach(healthAttr::removeModifier);
+            healthAttr.getModifiers().stream().filter(m -> VIT_HEALTH_KEY.equals(m.getKey())).forEach(healthAttr::removeModifier);
             double bonus = vit + Math.min(3, Math.max(0, vit - 10));
             if (bonus != 0) {
-                healthAttr.addTransientModifier(new org.bukkit.attribute.AttributeModifier(VIT_HEALTH_UUID, "stat_vitality_health", bonus, org.bukkit.attribute.AttributeModifier.Operation.ADD_NUMBER));
+                healthAttr.addTransientModifier(new org.bukkit.attribute.AttributeModifier(VIT_HEALTH_KEY, bonus, org.bukkit.attribute.AttributeModifier.Operation.ADD_NUMBER, EquipmentSlotGroup.ANY));
             }
             if (player.getHealth() > healthAttr.getValue()) {
                 player.setHealth(healthAttr.getValue());
