@@ -277,8 +277,11 @@ public class StatsEffectListener implements Listener {
             int vit = stats.get(StatType.VITALITY);
             int agi = stats.get(StatType.AGILITY);
             if (agi >= 14 && event.getCause() == EntityDamageEvent.DamageCause.FALL) {
-                event.setCancelled(true);
-                return;
+                if (jumped.getOrDefault(player.getUniqueId(), false)) {
+                    event.setCancelled(true);
+                    jumped.put(player.getUniqueId(), false);
+                    return;
+                }
             }
             if (vit >= 14) {
                 switch (event.getCause()) {

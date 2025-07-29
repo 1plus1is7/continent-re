@@ -96,7 +96,7 @@ public class StatsManager {
         var damageAttr = player.getAttribute(org.bukkit.attribute.Attribute.ATTACK_DAMAGE);
         if (damageAttr != null) {
             damageAttr.getModifiers().stream().filter(m -> STR_DAMAGE_KEY.equals(m.getKey())).forEach(damageAttr::removeModifier);
-            double bonus = 0.05 * str + Math.min(3, Math.max(0, str - 10));
+            double bonus = str * 0.2; // 0.2 damage per point of Strength
             if (bonus != 0) {
                 damageAttr.addTransientModifier(new org.bukkit.attribute.AttributeModifier(STR_DAMAGE_KEY, bonus, org.bukkit.attribute.AttributeModifier.Operation.ADD_NUMBER, EquipmentSlotGroup.ANY));
             }
@@ -131,7 +131,7 @@ public class StatsManager {
         var healthAttr = player.getAttribute(org.bukkit.attribute.Attribute.MAX_HEALTH);
         if (healthAttr != null) {
             healthAttr.getModifiers().stream().filter(m -> VIT_HEALTH_KEY.equals(m.getKey())).forEach(healthAttr::removeModifier);
-            double bonus = vit + Math.min(3, Math.max(0, vit - 10));
+            double bonus = vit * 2.0; // +1 heart (2 health) per Vitality point
             if (bonus != 0) {
                 healthAttr.addTransientModifier(new org.bukkit.attribute.AttributeModifier(VIT_HEALTH_KEY, bonus, org.bukkit.attribute.AttributeModifier.Operation.ADD_NUMBER, EquipmentSlotGroup.ANY));
             }
