@@ -148,7 +148,7 @@ public class StatsEffectListener implements Listener {
         java.util.UUID id = player.getUniqueId();
         org.bukkit.scheduler.BukkitTask old = staminaTasks.remove(id);
         if (old != null) old.cancel();
-        org.bukkit.scheduler.BukkitTask task = org.bukkit.Bukkit.getScheduler().runTaskTimer(me.continent.ContinentPlugin.getInstance(), new org.bukkit.scheduler.BukkitRunnable() {
+        org.bukkit.scheduler.BukkitRunnable runnable = new org.bukkit.scheduler.BukkitRunnable() {
             final long start = System.currentTimeMillis();
             @Override
             public void run() {
@@ -166,7 +166,8 @@ public class StatsEffectListener implements Listener {
                 }
                 sendCooldownBar(player, elapsed, cd);
             }
-        }, 0L, 2L);
+        };
+        org.bukkit.scheduler.BukkitTask task = runnable.runTaskTimer(me.continent.ContinentPlugin.getInstance(), 0L, 2L);
         staminaTasks.put(id, task);
     }
 
