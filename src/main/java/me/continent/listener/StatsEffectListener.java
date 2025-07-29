@@ -56,6 +56,9 @@ public class StatsEffectListener implements Listener {
             public void run() {
                 for (Player p : org.bukkit.Bukkit.getOnlinePlayers()) {
                     PlayerStats stats = PlayerDataManager.get(p.getUniqueId()).getStats();
+                    if (p.isDead() || p.getHealth() <= 0.0) {
+                        continue;
+                    }
                     int vit = stats.get(StatType.VITALITY);
                     if (vit >= 5 && p.getFoodLevel() > 6 && p.getHealth() < p.getAttribute(org.bukkit.attribute.Attribute.MAX_HEALTH).getValue()) {
                         p.setHealth(Math.min(p.getHealth() + 0.5, p.getAttribute(org.bukkit.attribute.Attribute.MAX_HEALTH).getValue()));
