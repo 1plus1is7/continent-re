@@ -39,6 +39,7 @@ public class StatsEffectListener implements Listener {
     private final Map<java.util.UUID, Long> dodgeCooldown = new HashMap<>();
     private final Map<java.util.UUID, Long> healCooldown = new HashMap<>();
     private final Map<java.util.UUID, Long> smashCooldown = new HashMap<>();
+    private final Map<java.util.UUID, org.bukkit.scheduler.BukkitTask> staminaTasks = new HashMap<>();
 
     public StatsEffectListener() {
         new org.bukkit.scheduler.BukkitRunnable() {
@@ -89,6 +90,8 @@ public class StatsEffectListener implements Listener {
         dodgeCooldown.remove(id);
         healCooldown.remove(id);
         smashCooldown.remove(id);
+        org.bukkit.scheduler.BukkitTask task = staminaTasks.remove(id);
+        if (task != null) task.cancel();
     }
 
     @EventHandler
@@ -132,6 +135,42 @@ public class StatsEffectListener implements Listener {
         }
     }
 
+    private void startCooldownBar(Player player, long cd) {
+        java.util.UUID id = player.getUniqueId();
+        org.bukkit.scheduler.BukkitTask old = staminaTasks.remove(id);
+        if (old != null) old.cancel();
+        org.bukkit.scheduler.BukkitTask task = org.bukkit.Bukkit.getScheduler().runTaskTimer(me.continent.ContinentPlugin.getInstance(), new org.bukkit.scheduler.BukkitRunnable() {
+            final long start = System.currentTimeMillis();
+            @Override
+            public void run() {
+                if (!player.isOnline()) {
+                    this.cancel();
+                    staminaTasks.remove(id);
+                    return;
+                }
+                long elapsed = System.currentTimeMillis() - start;
+                if (elapsed >= cd) {
+                    player.sendActionBar("§a▮▮▮▮▮▮▮▮▮▮");
+                    this.cancel();
+                    staminaTasks.remove(id);
+                    return;
+                }
+                sendCooldownBar(player, elapsed, cd);
+            }
+        }, 0L, 2L);
+        staminaTasks.put(id, task);
+    }
+
+    private void sendCooldownBar(Player player, long elapsed, long total) {
+        double progress = elapsed / (double) total;
+        int filled = (int) Math.round(progress * 10);
+        StringBuilder bar = new StringBuilder("§a");
+        for (int i = 0; i < 10; i++) {
+            bar.append(i < filled ? '▮' : '▯');
+        }
+        player.sendActionBar(bar.toString());
+    }
+
     @EventHandler
     public void onMove(PlayerMoveEvent event) {
         Player player = event.getPlayer();
@@ -150,6 +189,7 @@ public class StatsEffectListener implements Listener {
         PlayerStats stats = PlayerDataManager.get(player.getUniqueId()).getStats();
         if (stats.get(StatType.AGILITY) >= 10 && player.getGameMode() == GameMode.SURVIVAL) {
             if (!jumped.getOrDefault(player.getUniqueId(), false)) {
+                event.setCancelled(true);
                 long now = System.currentTimeMillis();
                 long last = lastJumpTime.getOrDefault(player.getUniqueId(), 0L);
                 long cd = 2000;
@@ -157,9 +197,11 @@ public class StatsEffectListener implements Listener {
                 if (agi >= 11) cd = 1000;
                 if (agi >= 12) cd = 750;
                 if (agi >= 13) cd = 500;
-                if (now - last < cd) return;
+                if (now - last < cd) {
+                    sendCooldownBar(player, now - last, cd);
+                    return;
+                }
 
-                event.setCancelled(true);
                 player.setAllowFlight(false);
                 // Apply forward dash with jump
                 double speed = 1.2;
@@ -171,7 +213,9 @@ public class StatsEffectListener implements Listener {
 
                 // Dust effect and wind sound
                 player.getWorld().spawnParticle(org.bukkit.Particle.CLOUD, player.getLocation(), 20, 0.3, 0.1, 0.3, 0);
-                player.playSound(player.getLocation(), Sound.ITEM_ELYTRA_FLYING, 1f, 1f);
+                player.playSound(player.getLocation(), Sound.ENTITY_WIND_CHARGE_WIND_BURST, 1f, 1f);
+
+                startCooldownBar(player, cd);
 
                 jumped.put(player.getUniqueId(), true);
                 lastJumpTime.put(player.getUniqueId(), now);
