@@ -47,24 +47,38 @@ public class StatsManager {
         applyStats(player);
     }
 
+    private static final Color[] MASTER_COLORS = {
+            Color.fromRGB(0xFFD700),
+            Color.fromRGB(0xFFFF55),
+            Color.fromRGB(0xB366FF)
+    };
+
     private static void launchFireworks(Player player, boolean multiple) {
         if (multiple) {
+            int shots = 3 + (int) (Math.random() * 3);
             new BukkitRunnable() {
                 int count = 0;
                 @Override
                 public void run() {
-                    spawnFirework(player, Color.fromRGB(0xFFDB4D));
+                    Color c = MASTER_COLORS[(int) (Math.random() * MASTER_COLORS.length)];
+                    spawnFirework(player, c, true);
                     count++;
-                    if (count >= 5) cancel();
+                    if (count >= shots) cancel();
                 }
             }.runTaskTimer(ContinentPlugin.getInstance(), 0L, 4L);
         } else {
-            spawnFirework(player, Color.fromRGB(0xFFDB4D));
+            spawnFirework(player, Color.fromRGB(0xFFDB4D), false);
         }
     }
 
-    private static void spawnFirework(Player player, Color color) {
-        Firework fw = (Firework) player.getWorld().spawnEntity(player.getLocation(), EntityType.FIREWORK_ROCKET);
+    private static void spawnFirework(Player player, Color color, boolean around) {
+        org.bukkit.Location loc = player.getLocation();
+        if (around) {
+            double dx = (Math.random() - 0.5) * 4;
+            double dz = (Math.random() - 0.5) * 4;
+            loc = loc.clone().add(dx, 0, dz);
+        }
+        Firework fw = (Firework) player.getWorld().spawnEntity(loc, EntityType.FIREWORK_ROCKET);
         FireworkMeta meta = fw.getFireworkMeta();
         meta.addEffect(FireworkEffect.builder().withColor(color).with(FireworkEffect.Type.STAR).build());
         meta.setPower(0);
@@ -100,8 +114,8 @@ public class StatsManager {
         if (attackSpeedAttr != null) {
             attackSpeedAttr.getModifiers().stream().filter(m -> STR_ATTACK_SPEED_KEY.equals(m.getKey())).forEach(attackSpeedAttr::removeModifier);
             if (str >= 10) {
-                // High value effectively removes cooldown
-                attackSpeedAttr.addTransientModifier(new org.bukkit.attribute.AttributeModifier(STR_ATTACK_SPEED_KEY, 4.0, org.bukkit.attribute.AttributeModifier.Operation.ADD_NUMBER, EquipmentSlotGroup.ANY));
+                // Large bonus effectively removes attack cooldown
+                attackSpeedAttr.addTransientModifier(new org.bukkit.attribute.AttributeModifier(STR_ATTACK_SPEED_KEY, 16.0, org.bukkit.attribute.AttributeModifier.Operation.ADD_NUMBER, EquipmentSlotGroup.ANY));
             }
         }
 
