@@ -16,6 +16,7 @@ import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
@@ -69,6 +70,18 @@ public class StatsEffectListener implements Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
         StatsManager.applyStats(event.getPlayer());
+    }
+
+    @EventHandler
+    public void onQuit(PlayerQuitEvent event) {
+        java.util.UUID id = event.getPlayer().getUniqueId();
+        jumped.remove(id);
+        lastJumpTime.remove(id);
+        lastSprint.remove(id);
+        dashCooldown.remove(id);
+        dodgeCooldown.remove(id);
+        healCooldown.remove(id);
+        smashCooldown.remove(id);
     }
 
     @EventHandler
