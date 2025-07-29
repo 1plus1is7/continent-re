@@ -39,7 +39,16 @@ public class StatsEffectListener implements Listener {
     private final Map<java.util.UUID, Long> dodgeCooldown = new HashMap<>();
     private final Map<java.util.UUID, Long> healCooldown = new HashMap<>();
     private final Map<java.util.UUID, Long> smashCooldown = new HashMap<>();
-    private final Map<java.util.UUID, org.bukkit.scheduler.BukkitTask> staminaTasks = new HashMap<>();
+    private static final Map<java.util.UUID, org.bukkit.scheduler.BukkitTask> staminaTasks = new HashMap<>();
+
+    /**
+     * Checks if the given player currently has an active stamina/cooldown bar.
+     * This is used by other systems to avoid overriding the action bar while
+     * a cooldown is being displayed.
+     */
+    public static boolean hasStaminaTask(Player player) {
+        return staminaTasks.containsKey(player.getUniqueId());
+    }
 
     public StatsEffectListener() {
         new org.bukkit.scheduler.BukkitRunnable() {
@@ -197,10 +206,7 @@ public class StatsEffectListener implements Listener {
                 if (agi >= 11) cd = 1000;
                 if (agi >= 12) cd = 750;
                 if (agi >= 13) cd = 500;
-                if (now - last < cd) {
-                    sendCooldownBar(player, now - last, cd);
-                    return;
-                }
+                double ratio = Math.min(1.0, (now - last) / (double) cd);
 
                 player.setAllowFlight(false);
                 // Apply forward dash with jump
@@ -208,7 +214,8 @@ public class StatsEffectListener implements Listener {
                 if (agi >= 11) speed = 1.4;
                 if (agi >= 12) speed = 1.6;
                 if (agi >= 13) speed = 1.8;
-                Vector dir = player.getLocation().getDirection().setY(0).normalize().multiply(speed).setY(0.6);
+                speed *= ratio;
+                Vector dir = player.getLocation().getDirection().setY(0).normalize().multiply(speed).setY(0.6 * ratio);
                 player.setVelocity(dir);
 
                 // Dust effect and wind sound

@@ -75,6 +75,11 @@ public class CropGrowthManager {
     private static void displayTick() {
         long now = System.currentTimeMillis();
         for (Player player : Bukkit.getOnlinePlayers()) {
+            // Avoid overriding the action bar when a stamina/cooldown bar is active
+            if (me.continent.listener.StatsEffectListener.hasStaminaTask(player)) {
+                continue;
+            }
+
             Block target = player.getTargetBlockExact(5);
             if (target == null) continue;
             CropData data = crops.get(target.getLocation());
