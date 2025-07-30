@@ -39,6 +39,7 @@ public class NationMenuService {
         inv.setItem(29, createItem(Material.PAPER, "세금 정보"));
         inv.setItem(23, createItem(Material.COMPASS, "국가 스폰 이동"));
         inv.setItem(25, createItem(Material.CHEST, "국가 창고"));
+        inv.setItem(33, createItem(Material.IRON_SWORD, "전쟁 통계"));
         inv.setItem(31, createItem(Material.ARROW, "메인 메뉴"));
 
         player.openInventory(inv);

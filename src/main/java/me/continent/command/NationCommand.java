@@ -29,34 +29,17 @@ public class NationCommand implements TabExecutor {
         }
 
         if (args.length == 0) {
-            player.sendMessage("§6[Nation 명령어 도움말]");
-            player.sendMessage("§e/nation create <이름> §7- 국가 또는 국가 생성");
-            player.sendMessage("§e/nation disband §7- 국가 해산");
-            player.sendMessage("§e/nation claim §7- 청크 점령");
-            player.sendMessage("§e/nation invite <플레이어> §7- 초대 전송");
-            player.sendMessage("§e/nation invites §7- 받은 초대 목록 확인");
-            player.sendMessage("§e/nation accept <이름> §7- 초대 수락");
-            player.sendMessage("§e/nation deny <이름> §7- 초대 거절");
-            player.sendMessage("§e/nation members §7- 국가 구성원 확인");
-            player.sendMessage("§e/nation leave §7- 국가 탈퇴");
-            player.sendMessage("§e/nation kick <플레이어> §7- 구성원 추방");
-            player.sendMessage("§e/nation rename <새이름> §7- 국가 이름 변경");
-            player.sendMessage("§e/nation list §7- 서버 내 모든 국가 목록");
-            player.sendMessage("§e/nation setspawn §7- 국가 스폰 위치 설정");
-            player.sendMessage("§e/nation setcore §7- 코어 위치 이동");
-            player.sendMessage("§e/nation spawn §7- 국가 스폰으로 이동");
-            player.sendMessage("§e/nation chest §7- 국가 창고 열기");
-            player.sendMessage("§e/nation menu §7- 국가 메뉴 열기");
-            player.sendMessage("§e/nation setsymbol §7- 상징 아이템 설정");
-            player.sendMessage("§e/nation ignite <on|off> §7- 아군 점화 허용 토글");
-            player.sendMessage("§e/nation upkeep §7- 현재 유지비 확인");
-            player.sendMessage("§e/nation treasury <subcommand> §7- 금고 관리");
-            player.sendMessage("§e/nation specialty §7- 특산품 관리");
-            player.sendMessage("§e/nation upgrade §7- 국가 등급 승격 시도");
-            player.sendMessage("§e/nation tier §7- 현재 국가 등급 확인");
-            player.sendMessage("§e/nation tierinfo §7- 등급별 기능 안내");
-            player.sendMessage("§e/nation confirm §7- 대기 중인 작업 확인");
-            player.sendMessage("§e/nation chat §7- 국가 채팅 토글");
+            Nation nation = NationManager.getByPlayer(player.getUniqueId());
+            if (nation == null) {
+                player.sendMessage("§c소속된 국가가 없습니다.");
+                return true;
+            }
+            NationMenuService.openMenu(player, nation);
+            return true;
+        }
+
+        if (args[0].equalsIgnoreCase("help")) {
+            sendHelp(player);
             return true;
         }
 
@@ -694,7 +677,7 @@ public class NationCommand implements TabExecutor {
             return true;
         }
 
-        player.sendMessage("§c알 수 없는 하위 명령어입니다. /nation 을 입력해 도움말을 확인하세요.");
+        player.sendMessage("§c알 수 없는 하위 명령어입니다. /nation help 로 도움말을 확인하세요.");
         return true;
     }
 
@@ -703,7 +686,7 @@ public class NationCommand implements TabExecutor {
         List<String> subs = Arrays.asList(
                 "create", "disband", "claim", "invite", "invites", "accept", "deny",
                 "members", "leave", "kick", "rename", "list", "setspawn", "setcore",
-                "spawn", "chest", "menu", "setsymbol", "ignite", "upkeep", "treasury", "specialty", "upgrade", "tier", "tierinfo", "confirm", "chat"
+                "spawn", "chest", "menu", "setsymbol", "ignite", "upkeep", "treasury", "specialty", "upgrade", "tier", "tierinfo", "confirm", "chat", "help"
         );
 
         if (args.length == 1) {
@@ -727,5 +710,36 @@ public class NationCommand implements TabExecutor {
         }
 
         return Collections.emptyList();
+    }
+
+    private static void sendHelp(Player player) {
+        player.sendMessage("§6[Nation 명령어 도움말]");
+        player.sendMessage("§e/nation create <이름> §7- 국가 또는 국가 생성");
+        player.sendMessage("§e/nation disband §7- 국가 해산");
+        player.sendMessage("§e/nation claim §7- 청크 점령");
+        player.sendMessage("§e/nation invite <플레이어> §7- 초대 전송");
+        player.sendMessage("§e/nation invites §7- 받은 초대 목록 확인");
+        player.sendMessage("§e/nation accept <이름> §7- 초대 수락");
+        player.sendMessage("§e/nation deny <이름> §7- 초대 거절");
+        player.sendMessage("§e/nation members §7- 국가 구성원 확인");
+        player.sendMessage("§e/nation leave §7- 국가 탈퇴");
+        player.sendMessage("§e/nation kick <플레이어> §7- 구성원 추방");
+        player.sendMessage("§e/nation rename <새이름> §7- 국가 이름 변경");
+        player.sendMessage("§e/nation list §7- 서버 내 모든 국가 목록");
+        player.sendMessage("§e/nation setspawn §7- 국가 스폰 위치 설정");
+        player.sendMessage("§e/nation setcore §7- 코어 위치 이동");
+        player.sendMessage("§e/nation spawn §7- 국가 스폰으로 이동");
+        player.sendMessage("§e/nation chest §7- 국가 창고 열기");
+        player.sendMessage("§e/nation setsymbol §7- 상징 아이템 설정");
+        player.sendMessage("§e/nation ignite <on|off> §7- 아군 점화 허용 토글");
+        player.sendMessage("§e/nation upkeep §7- 현재 유지비 확인");
+        player.sendMessage("§e/nation treasury <subcommand> §7- 금고 관리");
+        player.sendMessage("§e/nation specialty §7- 특산품 관리");
+        player.sendMessage("§e/nation upgrade §7- 국가 등급 승격 시도");
+        player.sendMessage("§e/nation tier §7- 현재 국가 등급 확인");
+        player.sendMessage("§e/nation tierinfo §7- 등급별 기능 안내");
+        player.sendMessage("§e/nation confirm §7- 대기 중인 작업 확인");
+        player.sendMessage("§e/nation chat §7- 국가 채팅 토글");
+        player.sendMessage("§e/nation menu §7- 국가 메뉴 열기");
     }
 }

@@ -7,7 +7,7 @@ Continent 플러그인은 마인크래프트 서버에서 국가 체계와 경�
 - **중앙은행**  
   거래량에 따라 환율이 변동되며 서버 종료 시 `centralbank.yml`에 환율이 저장됩니다.
 - **국가 관리**
-  `/nation` 명령을 통해 국가 생성(`create`)과 해산(`disband`), 영토 점령/해제(`claim`, `unclaim`), 초대(`invite`, `accept`, `deny`, `invites`)와 추방(`kick`), 구성원 목록(`members`), 탈퇴(`leave`), 국가명 변경(`rename`), 색상 변경(`color`), 국가 금고 관리(`treasury balance|deposit|withdraw`), 스폰 설정 및 이동(`setspawn`, `spawn`), 코어 위치 지정(`setcore`), 국가 창고(`chest`), 인벤토리 기반의 관리 메뉴(`menu`), 점화 허용 토글(`ignite`), 국가 채팅 토글(`chat`), 명령 확인(`confirm`), 서버 내 국가 목록(`list`) 등 모든 행정 명령이 제공됩니다.
+  `/nation` 명령을 통해 국가 생성(`create`)과 해산(`disband`), 영토 점령/해제(`claim`, `unclaim`), 초대(`invite`, `accept`, `deny`, `invites`)와 추방(`kick`), 구성원 목록(`members`), 탈퇴(`leave`), 국가명 변경(`rename`), 색상 변경(`color`), 국가 금고 관리(`treasury balance|deposit|withdraw`), 스폰 설정 및 이동(`setspawn`, `spawn`), 코어 위치 지정(`setcore`), 국가 창고(`chest`), 인벤토리 기반의 관리 메뉴(`/nation`), 점화 허용 토글(`ignite`), 국가 채팅 토글(`chat`), 명령 확인(`confirm`), 서버 내 국가 목록(`list`) 등 모든 행정 명령이 제공됩니다.
 - **국가 창고**
   27칸의 전용 인벤토리를 제공하며 내용물은 자동 저장됩니다.
 - **영토 및 코어 보호**  

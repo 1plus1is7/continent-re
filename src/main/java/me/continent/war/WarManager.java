@@ -69,9 +69,16 @@ public class WarManager {
         War war = getWar(loser.getName());
         if (war == null) return;
         endWar(war);
-        String winner = war.getAttacker().equalsIgnoreCase(loser.getName())
+        String winnerName = war.getAttacker().equalsIgnoreCase(loser.getName())
                 ? war.getDefender() : war.getAttacker();
-        Bukkit.broadcastMessage("§e[전쟁] §f" + loser.getName() + " 국가이 항복했습니다. 승자는 " + winner + " 국가입니다.");
+        Nation winner = NationManager.getByName(winnerName);
+        if (winner != null) {
+            winner.setWarWins(winner.getWarWins() + 1);
+            NationStorage.save(winner);
+        }
+        loser.setWarLosses(loser.getWarLosses() + 1);
+        NationStorage.save(loser);
+        Bukkit.broadcastMessage("§e[전쟁] §f" + loser.getName() + " 국가이 항복했습니다. 승자는 " + winnerName + " 국가입니다.");
     }
 
     public static void coreDestroyed(Nation nation, Nation attacker) {

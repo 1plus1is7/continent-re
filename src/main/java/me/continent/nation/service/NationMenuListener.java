@@ -36,6 +36,8 @@ public class NationMenuListener implements Listener {
                 }
             } else if (slot == 25) {
                 ChestService.openChest(player, nation);
+            } else if (slot == 33) {
+                NationWarStatsService.openMenu(player, nation);
             } else if (slot == 31) {
                 ServerMenuService.openMenu(player);
             }
