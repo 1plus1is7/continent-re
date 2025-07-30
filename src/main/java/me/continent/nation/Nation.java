@@ -45,6 +45,10 @@ public class Nation {
     private final Set<String> selectedT4Nodes = new HashSet<>();
     private int researchSlots = 1;
 
+    // War statistics
+    private int warWins = 0;
+    private int warLosses = 0;
+
 
     public Nation(String name, UUID king) {
         this.name = name;
@@ -193,6 +197,15 @@ public class Nation {
     public void setResearchSlots(int slots) {
         this.researchSlots = slots;
     }
+
+    // ---- War stats ----
+    public int getWarWins() { return warWins; }
+
+    public void setWarWins(int wins) { this.warWins = wins; }
+
+    public int getWarLosses() { return warLosses; }
+
+    public void setWarLosses(int losses) { this.warLosses = losses; }
 
 
     public long getProtectionEnd() { return protectionEnd; }

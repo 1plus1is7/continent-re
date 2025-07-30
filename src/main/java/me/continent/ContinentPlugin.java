@@ -27,6 +27,7 @@ import me.continent.nation.service.NationMenuListener;
 import me.continent.nation.service.NationTreasuryListener;
 import me.continent.nation.service.NationMemberListener;
 import me.continent.nation.service.NationUpkeepListener;
+import me.continent.nation.service.NationWarStatsListener;
 import me.continent.menu.ServerMenuListener;
 import me.continent.job.JobManager;
 import me.continent.job.JobMenuListener;
@@ -121,6 +122,7 @@ public class ContinentPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new NationTreasuryListener(), this);
         getServer().getPluginManager().registerEvents(new NationMemberListener(), this);
         getServer().getPluginManager().registerEvents(new NationUpkeepListener(), this);
+        getServer().getPluginManager().registerEvents(new NationWarStatsListener(), this);
         getServer().getPluginManager().registerEvents(new ServerMenuListener(), this);
         getServer().getPluginManager().registerEvents(new me.continent.economy.gui.GoldMenuListener(), this);
         getServer().getPluginManager().registerEvents(new me.continent.enterprise.gui.EnterpriseMenuListener(), this);

@@ -19,7 +19,7 @@
 - `nation treasury balance|deposit|withdraw` : 국가 금고 관리
 - `nation setspawn` / `nation spawn` : 국가 스폰 위치 설정 및 이동
 - `nation chest` : 국가 전용 창고 열기
-- `nation menu` : GUI 기반 관리 메뉴
+- `nation` : GUI 기반 관리 메뉴
 
 국가별로 고유한 색상과 이름을 지정할 수 있으며 모든 국가는 주간 유지비를 납부해야 합니다.
 

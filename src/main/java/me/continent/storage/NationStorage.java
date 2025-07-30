@@ -56,6 +56,8 @@ public class NationStorage {
         config.set("maintenanceCount", nation.getMaintenanceCount());
         config.set("unpaidWeeks", nation.getUnpaidWeeks());
         config.set("lastMaintenance", nation.getLastMaintenance());
+        config.set("warWins", nation.getWarWins());
+        config.set("warLosses", nation.getWarLosses());
 
         try {
             config.save(file);
@@ -87,6 +89,8 @@ public class NationStorage {
             int maintenanceCount = config.getInt("maintenanceCount", 0);
             int unpaidWeeks = config.getInt("unpaidWeeks", 0);
             long lastMaintenance = config.getLong("lastMaintenance", 0);
+            int warWins = config.getInt("warWins", 0);
+            int warLosses = config.getInt("warLosses", 0);
             
 
             Nation nation = new Nation(name, king);
@@ -107,6 +111,8 @@ public class NationStorage {
             nation.setLastMaintenance(lastMaintenance);
             nation.setCoreChunkKey(config.getString("core-chunk"));
             nation.setSpawnChunkKey(config.getString("spawn-chunk"));
+            nation.setWarWins(warWins);
+            nation.setWarLosses(warLosses);
 
             NationManager.register(nation);
         }
