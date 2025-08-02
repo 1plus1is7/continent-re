@@ -20,6 +20,7 @@ war:
   declare-cost: 0
 season:
   start-date: "2025-01-01"
+  length: 14
   variables:
     SPRING: {}
     SUMMER: {}

@@ -9,12 +9,15 @@ import me.continent.nation.service.MaintenanceService;
 import me.continent.player.PlayerData;
 import me.continent.player.PlayerDataManager;
 import me.continent.stat.PlayerStats;
+import me.continent.season.Season;
+import me.continent.season.SeasonManager;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
 
+import java.time.LocalDate;
 import java.util.*;
 
 public class AdminCommand implements TabExecutor {
@@ -39,6 +42,10 @@ public class AdminCommand implements TabExecutor {
             sender.sendMessage("§e/admin maintenance setcost <값> §7- 기본 유지비 설정");
             sender.sendMessage("§e/admin maintenance setperchunk <값> §7- 청크당 비용 설정");
             sender.sendMessage("§e/admin maintenance setlimit <값> §7- 미납 한도 설정");
+            sender.sendMessage("§e/admin season get §7- 현재 계절 정보");
+            sender.sendMessage("§e/admin season setstart <날짜> §7- 시작일 설정");
+            sender.sendMessage("§e/admin season setlength <일수> §7- 기간 설정");
+            sender.sendMessage("§e/admin season set <계절> §7- 현재 계절 변경");
             sender.sendMessage("§e/admin stat add <플레이어> <수량> §7- 스탯 포인트 지급");
             sender.sendMessage("§e/admin stat remove <플레이어> <수량> §7- 스탯 포인트 차감");
             sender.sendMessage("§e/admin stat set <플레이어> <수량> §7- 스탯 포인트 설정");
@@ -184,6 +191,47 @@ public class AdminCommand implements TabExecutor {
             return true;
         }
 
+        if (args[0].equalsIgnoreCase("season")) {
+            if (args.length >= 2 && args[1].equalsIgnoreCase("get")) {
+                sender.sendMessage("§6[계절] §f현재 계절: §e" + SeasonManager.getCurrentSeason());
+                sender.sendMessage("§6[계절] §f시작일: §e" + SeasonManager.getStartDate());
+                sender.sendMessage("§6[계절] §f기간: §e" + SeasonManager.getSeasonLength() + "일");
+                return true;
+            }
+            if (args.length >= 3 && args[1].equalsIgnoreCase("setstart")) {
+                try {
+                    LocalDate date = LocalDate.parse(args[2]);
+                    SeasonManager.setStartDate(date);
+                    sender.sendMessage("§6[계절] §f시작일을 " + date + "로 설정했습니다.");
+                } catch (Exception e) {
+                    sender.sendMessage("§c날짜 형식이 올바르지 않습니다. YYYY-MM-DD");
+                }
+                return true;
+            }
+            if (args.length >= 3 && args[1].equalsIgnoreCase("setlength")) {
+                try {
+                    int len = Integer.parseInt(args[2]);
+                    SeasonManager.setSeasonLength(len);
+                    sender.sendMessage("§6[계절] §f기간을 " + SeasonManager.getSeasonLength() + "일로 설정했습니다.");
+                } catch (NumberFormatException e) {
+                    sender.sendMessage("§c숫자를 입력해야 합니다.");
+                }
+                return true;
+            }
+            if (args.length >= 3 && args[1].equalsIgnoreCase("set")) {
+                try {
+                    Season season = Season.valueOf(args[2].toUpperCase());
+                    SeasonManager.setCurrentSeason(season);
+                    sender.sendMessage("§6[계절] §f현재 계절을 " + season + "로 설정했습니다.");
+                } catch (IllegalArgumentException e) {
+                    sender.sendMessage("§c잘못된 계절입니다.");
+                }
+                return true;
+            }
+            sender.sendMessage("§c사용법: /admin season <get|setstart|setlength|set>");
+            return true;
+        }
+
         if (args[0].equalsIgnoreCase("stat")) {
             if (args.length < 4) {
                 sender.sendMessage("§c사용법: /admin stat <add|remove|set> <플레이어> <수량>");
@@ -223,7 +271,7 @@ public class AdminCommand implements TabExecutor {
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         if (args.length == 1) {
-            return Arrays.asList("war", "rate", "maintenance", "stat").stream()
+            return Arrays.asList("war", "rate", "maintenance", "season", "stat").stream()
                     .filter(s -> s.startsWith(args[0].toLowerCase()))
                     .toList();
         }
@@ -261,6 +309,12 @@ public class AdminCommand implements TabExecutor {
                     .toList();
         }
 
+        if (args.length == 2 && args[0].equalsIgnoreCase("season")) {
+            return Arrays.asList("get", "setstart", "setlength", "set").stream()
+                    .filter(s -> s.startsWith(args[1].toLowerCase()))
+                    .toList();
+        }
+
         if (args.length == 2 && args[0].equalsIgnoreCase("maintenance")) {
             return Arrays.asList("get", "setcost", "setperchunk", "setlimit").stream()
                     .filter(s -> s.startsWith(args[1].toLowerCase()))
@@ -270,6 +324,13 @@ public class AdminCommand implements TabExecutor {
         if (args.length == 2 && args[0].equalsIgnoreCase("stat")) {
             return Arrays.asList("add", "remove", "set").stream()
                     .filter(s -> s.startsWith(args[1].toLowerCase()))
+                    .toList();
+        }
+
+        if (args.length == 3 && args[0].equalsIgnoreCase("season") && args[1].equalsIgnoreCase("set")) {
+            return Arrays.stream(Season.values())
+                    .map(s -> s.name().toLowerCase())
+                    .filter(s -> s.startsWith(args[2].toLowerCase()))
                     .toList();
         }
 
