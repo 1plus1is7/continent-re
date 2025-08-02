@@ -38,6 +38,7 @@ public class StatsEffectListener implements Listener {
         long lastJump;
         long lastTap;
         long cooldownUntil;
+        double fallDistance;
     }
 
     private final Map<UUID, DashState> dashStates = new HashMap<>();
@@ -214,10 +215,17 @@ public class StatsEffectListener implements Listener {
     public void onMove(PlayerMoveEvent event) {
         Player player = event.getPlayer();
         PlayerStats stats = PlayerDataManager.get(player.getUniqueId()).getStats();
-        if (stats.get(StatType.AGILITY) >= 10 && player.getGameMode() == GameMode.SURVIVAL && player.isOnGround()) {
-            player.setAllowFlight(true);
-            DashState state = getDashState(player);
-            state.jumped = false;
+        DashState state = getDashState(player);
+        if (player.isOnGround()) {
+            state.fallDistance = 0;
+            if (stats.get(StatType.AGILITY) >= 10 && player.getGameMode() == GameMode.SURVIVAL) {
+                player.setAllowFlight(true);
+                state.jumped = false;
+            } else if (player.getAllowFlight()) {
+                player.setAllowFlight(false);
+            }
+        } else {
+            state.fallDistance += Math.max(0, event.getFrom().getY() - event.getTo().getY());
         }
     }
 
@@ -229,7 +237,7 @@ public class StatsEffectListener implements Listener {
 
         DashState state = getDashState(player);
         if (!state.jumped) {
-            float fall = player.getFallDistance();
+            float fall = (float) state.fallDistance;
             event.setCancelled(true);
             long now = System.currentTimeMillis();
             long cd = getJumpCooldown(stats.get(StatType.AGILITY));
@@ -244,6 +252,7 @@ public class StatsEffectListener implements Listener {
             state.lastJump = now;
             state.cooldownUntil = now + cd;
             player.setFallDistance(fall);
+            state.fallDistance = fall;
         }
     }
 
@@ -289,13 +298,14 @@ public class StatsEffectListener implements Listener {
             if (event.getCause() == EntityDamageEvent.DamageCause.FALL) {
                 DashState state = getDashState(player);
                 state.jumped = false;
+                double dist = state.fallDistance;
                 if (agi >= 10) {
-                    float dist = player.getFallDistance();
                     double computed = Math.max(0, dist - 3.0);
-                    if (computed > event.getDamage()) {
+                    if (computed > 0) {
                         event.setDamage(computed);
                     }
                 }
+                state.fallDistance = 0;
             }
             if (vit >= 14) {
                 switch (event.getCause()) {

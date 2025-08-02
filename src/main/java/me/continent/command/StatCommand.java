@@ -36,30 +36,15 @@ public class StatCommand implements TabExecutor {
         }
 
         if (args[0].equalsIgnoreCase("add") && args.length >= 2) {
-            if (stats.getUnusedPoints() <= 0) {
-                player.sendMessage("§c사용 가능한 포인트가 없습니다.");
-                return true;
-            }
             try {
                 StatType type = StatType.valueOf(args[1].toUpperCase(Locale.ROOT));
-                int current = stats.get(type);
-                int limit = 10;
-                if (stats.getMastery() == type) limit = 15;
-                if (current >= limit) {
-                    player.sendMessage("§c이미 최대 수치입니다.");
-                    return true;
+                if (stats.investPoint(type)) {
+                    PlayerDataManager.save(player.getUniqueId());
+                    player.sendMessage("§a" + type.name() + " +1 (" + stats.get(type) + ")");
+                    me.continent.stat.StatsManager.applyStats(player);
+                } else {
+                    player.sendMessage("§c스탯을 추가할 수 없습니다.");
                 }
-                if (current + 1 > 10 && stats.getMastery() == null) {
-                    stats.setMastery(type);
-                } else if (current + 1 > 10 && stats.getMastery() != type) {
-                    player.sendMessage("§c이미 다른 스탯의 마스터리를 해금했습니다.");
-                    return true;
-                }
-                stats.set(type, current + 1);
-                stats.usePoint();
-                PlayerDataManager.save(player.getUniqueId());
-                player.sendMessage("§a" + type.name() + " +1 (" + stats.get(type) + ")");
-                me.continent.stat.StatsManager.applyStats(player);
             } catch (IllegalArgumentException e) {
                 player.sendMessage("§c잘못된 스탯입니다.");
             }
@@ -69,7 +54,7 @@ public class StatCommand implements TabExecutor {
         if (args[0].equalsIgnoreCase("remove") && args.length >= 2) {
             try {
                 StatType type = StatType.valueOf(args[1].toUpperCase(Locale.ROOT));
-                if (stats.refundPoint(type)) {
+                if (stats.removePoint(type)) {
                     PlayerDataManager.save(player.getUniqueId());
                     player.sendMessage("§a" + type.name() + " -1 (" + stats.get(type) + ")");
                     me.continent.stat.StatsManager.applyStats(player);
