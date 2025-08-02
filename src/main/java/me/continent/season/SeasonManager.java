@@ -15,6 +15,7 @@ import java.util.Map;
 
 public class SeasonManager {
     private static LocalDate startDate;
+    private static int seasonLength;
     private static final Map<Season, Map<String, Object>> variables = new EnumMap<>(Season.class);
     private static Season lastSeason = null;
     private static ContinentPlugin plugin;
@@ -24,6 +25,7 @@ public class SeasonManager {
         FileConfiguration config = plugin.getConfig();
         String start = config.getString("season.start-date", "2025-01-01");
         startDate = LocalDate.parse(start, DateTimeFormatter.ISO_DATE);
+        seasonLength = config.getInt("season.length", 14);
 
         ConfigurationSection varSec = config.getConfigurationSection("season.variables");
         if (varSec != null) {
@@ -61,13 +63,38 @@ public class SeasonManager {
     public static Season getCurrentSeason() {
         long days = ChronoUnit.DAYS.between(startDate, LocalDate.now());
         if (days < 0) days = 0;
-        int index = (int) ((days / 14) % 4);
+        int length = Math.max(seasonLength, 1);
+        int index = (int) ((days / length) % 4);
         return Season.values()[index];
     }
 
     public static Object getVariable(String name) {
         Map<String, Object> map = variables.get(getCurrentSeason());
         return map != null ? map.get(name) : null;
+    }
+
+    public static LocalDate getStartDate() {
+        return startDate;
+    }
+
+    public static void setStartDate(LocalDate date) {
+        startDate = date;
+        plugin.getConfig().set("season.start-date", date.format(DateTimeFormatter.ISO_DATE));
+        plugin.saveConfig();
+    }
+
+    public static int getSeasonLength() {
+        return seasonLength;
+    }
+
+    public static void setSeasonLength(int length) {
+        seasonLength = Math.max(length, 1);
+        plugin.getConfig().set("season.length", seasonLength);
+        plugin.saveConfig();
+    }
+
+    public static void setCurrentSeason(Season season) {
+        setStartDate(LocalDate.now().minusDays((long) season.ordinal() * seasonLength));
     }
 
     private static void broadcastSeasonMessage(Season season) {
