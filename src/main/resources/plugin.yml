@@ -18,7 +18,7 @@ commands:
     aliases: [ww]
     usage: /war <subcommand>
   guide:
-    description: Provides guide books about kingdom, nation and war
+    description: Provides guide books about kingdom, nation, war and season
     usage: /guide <topic>
   specialty:
     description: Specialty goods command

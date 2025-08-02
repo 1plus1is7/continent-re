@@ -53,6 +53,10 @@ import me.continent.research.ResearchManager;
 import me.continent.specialty.SpecialtyManager;
 import me.continent.specialty.SpecialtyListener;
 import me.continent.nation.service.NationSpecialtyListener;
+import me.continent.season.SeasonManager;
+import me.continent.season.SeasonWeatherTask;
+import me.continent.season.WinterFreezeTask;
+import me.continent.season.SeasonGrowthListener;
 
 public class ContinentPlugin extends JavaPlugin {
     private static ContinentPlugin instance;
@@ -95,6 +99,10 @@ public class ContinentPlugin extends JavaPlugin {
 
         CropGrowthManager.init(this);
 
+        SeasonManager.init(this);
+        SeasonWeatherTask.start(this);
+        WinterFreezeTask.start(this);
+
         ScoreboardService.schedule();
 
         MarketManager.load(this);
@@ -134,6 +142,7 @@ public class ContinentPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new me.continent.listener.StatsEffectListener(), this);
         getServer().getPluginManager().registerEvents(new me.continent.listener.StatLevelListener(), this);
         getServer().getPluginManager().registerEvents(new me.continent.listener.LuckDropListener(), this);
+        getServer().getPluginManager().registerEvents(new SeasonGrowthListener(), this);
 
 
         getServer().getPluginManager().registerEvents(new MarketListener(), this);

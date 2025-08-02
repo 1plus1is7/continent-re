@@ -18,3 +18,10 @@ lobby-world: "lobby"
 land-world: "world"
 war:
   declare-cost: 0
+season:
+  start-date: "2025-01-01"
+  variables:
+    SPRING: {}
+    SUMMER: {}
+    AUTUMN: {}
+    WINTER: {}
