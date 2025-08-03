@@ -24,9 +24,9 @@ commands:
     description: Specialty goods command
     aliases: [spc]
     usage: /specialty <subcommand>
-  admin:
-    description: Manage wars, economy, maintenance and seasons
-    usage: /admin <subcommand>
+    admin:
+      description: Manage wars, economy, maintenance, seasons, scoreboard and config
+      usage: /admin <subcommand>
   union:
     description: Manage unions of nations
     aliases: [u]
