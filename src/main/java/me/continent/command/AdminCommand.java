@@ -58,6 +58,7 @@ public class AdminCommand implements TabExecutor {
             sender.sendMessage("§e/admin scoreboard refresh <초> §7- 갱신 주기 설정");
             sender.sendMessage("§e/admin config get <경로> §7- 설정값 확인");
             sender.sendMessage("§e/admin config set <경로> <값> §7- 설정값 변경");
+            sender.sendMessage("§e/admin reload §7- 플러그인 설정 다시 불러오기");
             return true;
         }
 
@@ -283,6 +284,12 @@ public class AdminCommand implements TabExecutor {
             return true;
         }
 
+        if (args[0].equalsIgnoreCase("reload")) {
+            ContinentPlugin.reloadConfigValues();
+            sender.sendMessage("§6[관리자] §f설정을 다시 불러왔습니다.");
+            return true;
+        }
+
         if (args[0].equalsIgnoreCase("scoreboard")) {
             ContinentPlugin plugin = ContinentPlugin.getInstance();
             var config = plugin.getConfig();
@@ -383,7 +390,7 @@ public class AdminCommand implements TabExecutor {
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         if (args.length == 1) {
-            return Arrays.asList("war", "rate", "maintenance", "season", "config", "scoreboard", "stat").stream()
+            return Arrays.asList("war", "rate", "maintenance", "season", "config", "scoreboard", "stat", "reload").stream()
                     .filter(s -> s.startsWith(args[0].toLowerCase()))
                     .toList();
         }
