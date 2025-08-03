@@ -9,6 +9,9 @@ public class PlayerStats {
     private int unusedPoints = 0;
     private int lastLevelGiven = 0;
 
+    private static final int BASE_LIMIT = 10;
+    private static final int MASTERY_LIMIT = 15;
+
     public PlayerStats() {
         for (StatType type : StatType.values()) {
             stats.put(type, 0);
@@ -51,20 +54,36 @@ public class PlayerStats {
         this.unusedPoints += amount;
     }
 
-    public void usePoint() {
-        if (unusedPoints > 0) unusedPoints--;
+    /**
+     * Attempts to invest one point into the given stat.
+     * Returns true if successful.
+     */
+    public boolean investPoint(StatType type) {
+        int current = get(type);
+        int limit = mastery == type ? MASTERY_LIMIT : BASE_LIMIT;
+        if (unusedPoints <= 0 || current >= limit) return false;
+        if (current + 1 > BASE_LIMIT) {
+            if (mastery == null || mastery == type) {
+                mastery = type;
+            } else {
+                return false;
+            }
+        }
+        stats.put(type, current + 1);
+        unusedPoints--;
+        return true;
     }
 
     /**
      * Removes one point from the given stat if possible.
      * Returns true if a point was removed.
      */
-    public boolean refundPoint(StatType type) {
+    public boolean removePoint(StatType type) {
         int current = get(type);
         if (current <= 0) return false;
         stats.put(type, current - 1);
         unusedPoints++;
-        if (current - 1 < 11 && mastery == type) {
+        if (current - 1 < BASE_LIMIT + 1 && mastery == type) {
             mastery = null;
         }
         return true;
