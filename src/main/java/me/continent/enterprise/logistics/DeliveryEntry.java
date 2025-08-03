@@ -1,5 +1,6 @@
 package me.continent.enterprise.logistics;
 
+import me.continent.market.pricing.MarketSaleService;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.UUID;
@@ -14,14 +15,15 @@ public class DeliveryEntry {
     private final long finishTime;
     private final int reward;
 
-    public DeliveryEntry(UUID id, ItemStack item, String target, int amount, DeliveryState state, long finishTime, int reward) {
+    public DeliveryEntry(UUID id, ItemStack item, String target, int amount, DeliveryState state, long finishTime) {
         this.id = id;
         this.item = item;
         this.target = target;
         this.amount = amount;
         this.state = state;
         this.finishTime = finishTime;
-        this.reward = reward;
+        // calculate reward using dynamic market pricing
+        this.reward = MarketSaleService.calculateReward(item, amount);
     }
 
     public UUID getId() { return id; }

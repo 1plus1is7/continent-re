@@ -3,6 +3,7 @@ package me.continent.enterprise.gui;
 import me.continent.enterprise.EnterpriseType;
 import me.continent.enterprise.gui.DeliveryStatusGUI;
 import me.continent.enterprise.gui.EnterpriseListGUI;
+import me.continent.enterprise.gui.MarketLogGUI;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -58,6 +59,8 @@ public class EnterpriseMenuListener implements Listener {
                 me.continent.enterprise.ProductionGUI.open(player, holder.getEnterprise());
             } else if (slot == 23) {
                 me.continent.enterprise.StorageGUI.open(player, holder.getEnterprise());
+            } else if (slot == 25) {
+                MarketLogGUI.open(player, holder.getEnterprise());
             } else {
                 player.sendMessage("§e준비 중인 기능입니다.");
             }
