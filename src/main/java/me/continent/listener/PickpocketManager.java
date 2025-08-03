@@ -8,23 +8,29 @@ import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Location;
 import org.bukkit.Sound;
+import org.bukkit.NamespacedKey;
+import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 import java.util.UUID;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class PickpocketManager implements Listener {
 
@@ -39,8 +45,8 @@ public class PickpocketManager implements Listener {
         }
     }
 
+    private static final NamespacedKey UNSTEALABLE_KEY = new NamespacedKey(ContinentPlugin.getInstance(), "unstealable");
     private final Map<UUID, Attempt> attempts = new HashMap<>();
-    private final Set<UUID> viewing = new HashSet<>();
 
     @EventHandler
     public void onInteract(PlayerInteractEntityEvent event) {
@@ -88,7 +94,11 @@ public class PickpocketManager implements Listener {
                 }
 
                 if (attempt.ticks >= 60) {
-                    successAttempt(thief, target);
+                    if (ThreadLocalRandom.current().nextDouble() < 0.4) {
+                        successAttempt(thief, target);
+                    } else {
+                        failAttempt(thief, target);
+                    }
                     cancel();
                 }
             }
@@ -117,37 +127,52 @@ public class PickpocketManager implements Listener {
         }
     }
 
-    @EventHandler
-    public void onInventoryClick(InventoryClickEvent event) {
-        if (viewing.contains(event.getWhoClicked().getUniqueId())) {
-            event.setCancelled(true);
-        }
-    }
-
-    @EventHandler
-    public void onInventoryClose(InventoryCloseEvent event) {
-        viewing.remove(event.getPlayer().getUniqueId());
-    }
-
     private void successAttempt(Player thief, Player target) {
+        if (thief.getInventory().firstEmpty() == -1) {
+            failAttempt(thief, target);
+            return;
+        }
+
+        PlayerInventory targetInv = target.getInventory();
+        ItemStack[] contents = targetInv.getStorageContents();
+        List<Integer> slots = new ArrayList<>();
+        for (int i = 0; i < contents.length; i++) {
+            if (isStealable(contents[i])) {
+                slots.add(i);
+            }
+        }
+        if (slots.isEmpty()) {
+            failAttempt(thief, target);
+            return;
+        }
+
         attempts.remove(thief.getUniqueId());
+
+        int slot = slots.get(ThreadLocalRandom.current().nextInt(slots.size()));
+        ItemStack item = contents[slot];
+        int stealAmount = 1 + ThreadLocalRandom.current().nextInt(item.getAmount());
+        ItemStack stolen = item.clone();
+        stolen.setAmount(stealAmount);
+        thief.getInventory().addItem(stolen);
+        item.setAmount(item.getAmount() - stealAmount);
+        if (item.getAmount() <= 0) {
+            targetInv.setItem(slot, null);
+        }
+
         thief.playSound(thief.getLocation(), Sound.ITEM_BUNDLE_REMOVE_ONE, 0.3f, 1f);
         target.playSound(target.getLocation(), Sound.ITEM_BUNDLE_REMOVE_ONE, 0.3f, 1f);
-        thief.openInventory(target.getInventory());
-        viewing.add(thief.getUniqueId());
-        thief.spigot().sendMessage(ChatMessageType.ACTION_BAR,
-                new TextComponent("🎒 당신은 인벤토리를 훔쳐보고 있습니다"));
+        thief.sendMessage("소매치기에 성공했습니다!");
+        target.sendMessage("무언가가 사라진 것 같습니다...");
     }
 
     private void failAttempt(Player thief, Player target) {
-        Attempt attempt = attempts.remove(thief.getUniqueId());
-        if (attempt == null) return;
+        attempts.remove(thief.getUniqueId());
 
         thief.playSound(thief.getLocation(), Sound.ITEM_BUNDLE_REMOVE_ONE, 0.3f, 1f);
         target.playSound(target.getLocation(), Sound.ITEM_BUNDLE_REMOVE_ONE, 0.3f, 1f);
 
-        thief.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, 5 * 20, 0));
         thief.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, 20, 0));
+        dropRandomItem(thief);
 
         thief.sendMessage("⚠ 소매치기에 실패했습니다! 들켰습니다!");
         target.sendMessage("누군가 당신을 노리고 있었습니다...");
@@ -158,6 +183,31 @@ public class PickpocketManager implements Listener {
                 p.sendMessage(notice);
             }
         }
+    }
+
+    private void dropRandomItem(Player player) {
+        PlayerInventory inv = player.getInventory();
+        ItemStack[] contents = inv.getStorageContents();
+        List<Integer> available = new ArrayList<>();
+        for (int i = 0; i < contents.length; i++) {
+            if (contents[i] != null && contents[i].getType() != Material.AIR) {
+                available.add(i);
+            }
+        }
+        if (available.isEmpty()) return;
+        int slot = available.get(ThreadLocalRandom.current().nextInt(available.size()));
+        ItemStack drop = contents[slot];
+        inv.setItem(slot, null);
+        player.getWorld().dropItem(player.getLocation(), drop);
+    }
+
+    private boolean isStealable(ItemStack item) {
+        if (item == null || item.getType() == Material.AIR) return false;
+        ItemMeta meta = item.getItemMeta();
+        if (meta == null) return true;
+        if (meta.hasEnchant(Enchantment.BINDING_CURSE)) return false;
+        if (meta.getPersistentDataContainer().has(UNSTEALABLE_KEY, PersistentDataType.BYTE)) return false;
+        return true;
     }
 
     private boolean isTargetLooking(Player thief, Player target) {
