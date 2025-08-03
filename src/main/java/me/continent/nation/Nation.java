@@ -28,6 +28,9 @@ public class Nation {
     // Whether members of this nation can ignite fire or TNT in protected areas
     private boolean memberIgniteAllowed = false;
 
+    // Whether this nation has a prison built
+    private boolean hasPrison = false;
+
 
     private String coreChunkKey;
     private String spawnChunkKey;
@@ -224,6 +227,14 @@ public class Nation {
 
     public void setMemberIgniteAllowed(boolean allowed) {
         this.memberIgniteAllowed = allowed;
+    }
+
+    public boolean hasPrison() {
+        return hasPrison;
+    }
+
+    public void setHasPrison(boolean hasPrison) {
+        this.hasPrison = hasPrison;
     }
 
     // ---- 기능성 메서드 ----

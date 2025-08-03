@@ -36,6 +36,7 @@ import me.continent.enterprise.EnterpriseTypeConfig;
 import me.continent.nation.gui.NationListListener;
 import me.continent.enterprise.gui.EnterpriseListListener;
 import me.continent.listener.LuckDropListener;
+import me.continent.listener.PickpocketManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import me.continent.player.PlayerDataManager;
 import me.continent.command.MarketCommand;
@@ -142,6 +143,7 @@ public class ContinentPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new me.continent.listener.StatsEffectListener(), this);
         getServer().getPluginManager().registerEvents(new me.continent.listener.StatLevelListener(), this);
         getServer().getPluginManager().registerEvents(new me.continent.listener.LuckDropListener(), this);
+        getServer().getPluginManager().registerEvents(new PickpocketManager(), this);
         getServer().getPluginManager().registerEvents(new SeasonGrowthListener(), this);
 
 

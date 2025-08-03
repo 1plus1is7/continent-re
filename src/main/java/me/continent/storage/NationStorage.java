@@ -53,6 +53,7 @@ public class NationStorage {
         config.set("chest", serializeItems(nation.getChestContents()));
         config.set("symbol", ItemSerialization.serializeItem(nation.getSymbol()));
         config.set("memberIgnite", nation.isMemberIgniteAllowed());
+        config.set("hasPrison", nation.hasPrison());
         config.set("maintenanceCount", nation.getMaintenanceCount());
         config.set("unpaidWeeks", nation.getUnpaidWeeks());
         config.set("lastMaintenance", nation.getLastMaintenance());
@@ -86,6 +87,7 @@ public class NationStorage {
             ItemStack[] chest = deserializeItems(config.getString("chest"));
             org.bukkit.inventory.ItemStack symbol = ItemSerialization.deserializeItem(config.getString("symbol"));
             boolean memberIgnite = config.getBoolean("memberIgnite", false);
+            boolean hasPrison = config.getBoolean("hasPrison", false);
             int maintenanceCount = config.getInt("maintenanceCount", 0);
             int unpaidWeeks = config.getInt("unpaidWeeks", 0);
             long lastMaintenance = config.getLong("lastMaintenance", 0);
@@ -106,6 +108,7 @@ public class NationStorage {
                 nation.setSymbol(symbol);
             }
             nation.setMemberIgniteAllowed(memberIgnite);
+            nation.setHasPrison(hasPrison);
             nation.setMaintenanceCount(maintenanceCount);
             nation.setUnpaidWeeks(unpaidWeeks);
             nation.setLastMaintenance(lastMaintenance);
