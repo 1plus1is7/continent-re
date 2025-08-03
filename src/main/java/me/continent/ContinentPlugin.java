@@ -37,6 +37,7 @@ import me.continent.nation.gui.NationListListener;
 import me.continent.enterprise.gui.EnterpriseListListener;
 import me.continent.listener.LuckDropListener;
 import me.continent.listener.PickpocketManager;
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 import me.continent.player.PlayerDataManager;
 import me.continent.command.MarketCommand;
@@ -187,6 +188,15 @@ public class ContinentPlugin extends JavaPlugin {
 
     public static ContinentPlugin getInstance() {
         return instance;
+    }
+
+    public static void reloadConfigValues() {
+        ContinentPlugin plugin = getInstance();
+        plugin.reloadConfig();
+        translateColorCodes(plugin.getConfig());
+        MaintenanceService.init(plugin.getConfig());
+        Bukkit.getOnlinePlayers().forEach(ScoreboardService::update);
+        plugin.getLogger().info("Configuration reloaded");
     }
 
     private void registerCommand(String name, org.bukkit.command.CommandExecutor exe) {
