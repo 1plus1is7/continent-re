@@ -158,6 +158,7 @@ public class EnterpriseMenuService {
         inv.setItem(19, button(Material.WHITE_BANNER, "상징 설정", null));
         inv.setItem(22, button(Material.CRAFTING_TABLE, "생산 관리", null));
         inv.setItem(23, button(Material.CHEST, "창고", null));
+        inv.setItem(25, button(Material.EMERALD, "시장 정보", null));
         inv.setItem(49, button(Material.BARRIER, "닫기", null));
         player.openInventory(inv);
     }

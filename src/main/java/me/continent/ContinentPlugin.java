@@ -58,6 +58,11 @@ import me.continent.season.SeasonManager;
 import me.continent.season.SeasonWeatherTask;
 import me.continent.season.WinterFreezeTask;
 import me.continent.season.SeasonGrowthListener;
+import me.continent.market.pricing.DemandManager;
+import me.continent.market.pricing.MarketLogManager;
+import me.continent.market.pricing.PriceHistoryManager;
+
+import java.io.File;
 
 public class ContinentPlugin extends JavaPlugin {
     private static ContinentPlugin instance;
@@ -108,6 +113,9 @@ public class ContinentPlugin extends JavaPlugin {
         ScoreboardService.schedule();
 
         MarketManager.load(this);
+        DemandManager.load(new File(getDataFolder(), "market_demand.yml"));
+        MarketLogManager.load(new File(getDataFolder(), "market_logs.yml"));
+        PriceHistoryManager.load(new File(getDataFolder(), "price_history.yml"));
         EnterpriseService.init(this);
         EnterpriseService.loadAll();
         ContractManager.loadAll();
@@ -142,6 +150,9 @@ public class ContinentPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new me.continent.enterprise.gui.ProductionMenuListener(), this);
         getServer().getPluginManager().registerEvents(new me.continent.enterprise.ProductionGUI(), this);
         getServer().getPluginManager().registerEvents(new me.continent.enterprise.StorageGUI(), this);
+        getServer().getPluginManager().registerEvents(new me.continent.enterprise.gui.MarketLogGUI(), this);
+        getServer().getPluginManager().registerEvents(new me.continent.enterprise.gui.PriceFluctuationGUI(), this);
+        getServer().getPluginManager().registerEvents(new me.continent.enterprise.gui.MarketAnalysisGUI(), this);
         getServer().getPluginManager().registerEvents(new JobMenuListener(), this);
         getServer().getPluginManager().registerEvents(new me.continent.listener.StatsEffectListener(), this);
         getServer().getPluginManager().registerEvents(new me.continent.listener.StatLevelListener(), this);
@@ -164,6 +175,10 @@ public class ContinentPlugin extends JavaPlugin {
         ContractManager.saveAll();
         PlayerDataManager.saveAll();
         UnionStorage.saveAll();
+
+        DemandManager.save(new File(getDataFolder(), "market_demand.yml"));
+        MarketLogManager.save(new File(getDataFolder(), "market_logs.yml"));
+        PriceHistoryManager.save(new File(getDataFolder(), "price_history.yml"));
 
         CropGrowthManager.shutdown();
 
