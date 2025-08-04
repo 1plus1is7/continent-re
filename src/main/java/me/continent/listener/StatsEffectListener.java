@@ -217,12 +217,16 @@ public class StatsEffectListener implements Listener {
         PlayerStats stats = PlayerDataManager.get(player.getUniqueId()).getStats();
         DashState state = getDashState(player);
         if (player.isOnGround()) {
-            state.fallDistance = 0;
-            if (stats.get(StatType.AGILITY) >= 10 && player.getGameMode() == GameMode.SURVIVAL) {
-                player.setAllowFlight(true);
-                state.jumped = false;
-            } else if (player.getAllowFlight()) {
-                player.setAllowFlight(false);
+            if (player.getFallDistance() == 0) {
+                state.fallDistance = 0;
+            }
+            if (player.getGameMode() == GameMode.SURVIVAL) {
+                if (stats.get(StatType.AGILITY) >= 10) {
+                    player.setAllowFlight(true);
+                    state.jumped = false;
+                } else if (player.getAllowFlight()) {
+                    player.setAllowFlight(false);
+                }
             }
         } else {
             state.fallDistance += Math.max(0, event.getFrom().getY() - event.getTo().getY());

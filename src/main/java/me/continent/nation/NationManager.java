@@ -166,17 +166,22 @@ public class NationManager {
         return nationsByName.get(name.toLowerCase());
     }
 
-    // 초대 목록에서 해당 국가 제거
-    public static void removeInvite(UUID playerUUID, String nationName) {
-        Set<String> invites = playerInvites.get(playerUUID);
-        if (invites != null) {
-            invites.remove(nationName);
-        }
+    // 초대 목록에 국가 추가
+    public static void addInvite(UUID playerUUID, String nationName) {
+        playerInvites.computeIfAbsent(playerUUID, k -> new HashSet<>()).add(nationName);
     }
 
-    // 플레이어의 초대 목록 반환
+    // 초대 목록에서 해당 국가 제거
+    public static void removeInvite(UUID playerUUID, String nationName) {
+        playerInvites.computeIfPresent(playerUUID, (uuid, invites) -> {
+            invites.remove(nationName);
+            return invites.isEmpty() ? null : invites;
+        });
+    }
+
+    // 플레이어의 초대 목록 반환 (수정 불가 뷰 제공)
     public static Set<String> getInvites(UUID playerUUID) {
-        return playerInvites.getOrDefault(playerUUID, new HashSet<>());
+        return Collections.unmodifiableSet(playerInvites.getOrDefault(playerUUID, Collections.emptySet()));
     }
 
 
