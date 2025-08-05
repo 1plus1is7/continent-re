@@ -3,7 +3,7 @@ package me.continent.stat;
 import me.continent.ContinentPlugin;
 import me.continent.player.PlayerData;
 import me.continent.player.PlayerDataManager;
-import org.bukkit.Bukkit;
+import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
 import org.bukkit.Sound;
 import org.bukkit.entity.EntityType;
@@ -11,28 +11,8 @@ import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.Color;
-import org.bukkit.NamespacedKey;
-import org.bukkit.inventory.EquipmentSlotGroup;
-import org.bukkit.attribute.Attribute;
-import org.bukkit.attribute.AttributeModifier;
 
 public class StatsManager {
-
-    private static final NamespacedKey STR_DAMAGE_KEY = new NamespacedKey(ContinentPlugin.getInstance(), "str_damage");
-    private static final NamespacedKey AGI_SPEED_KEY = new NamespacedKey(ContinentPlugin.getInstance(), "agi_speed");
-    private static final NamespacedKey VIT_HEALTH_KEY = new NamespacedKey(ContinentPlugin.getInstance(), "vit_health");
-    private static final NamespacedKey STR_ATTACK_SPEED_KEY = new NamespacedKey(ContinentPlugin.getInstance(), "str_attack_speed");
-    private static final NamespacedKey STR_KNOCKBACK_KEY = new NamespacedKey(ContinentPlugin.getInstance(), "str_knockback");
-
-    private static void applyModifier(Player player, Attribute attrType, NamespacedKey key, double amount, AttributeModifier.Operation op) {
-        var attr = player.getAttribute(attrType);
-        if (attr == null) return;
-        attr.getModifiers().stream().filter(m -> key.equals(m.getKey())).forEach(attr::removeModifier);
-        if (amount != 0) {
-            attr.addTransientModifier(new AttributeModifier(key, amount, op, EquipmentSlotGroup.ANY));
-        }
-    }
 
     public static void checkLevelUp(Player player) {
         PlayerData data = PlayerDataManager.get(player.getUniqueId());
@@ -99,19 +79,8 @@ public class StatsManager {
 
     public static void applyStats(Player player) {
         PlayerStats stats = PlayerDataManager.get(player.getUniqueId()).getStats();
-
-        int str = stats.get(StatType.STRENGTH);
-        int agi = stats.get(StatType.AGILITY);
-        int vit = stats.get(StatType.VITALITY);
-
-        applyModifier(player, Attribute.ATTACK_DAMAGE, STR_DAMAGE_KEY, str * 0.2, AttributeModifier.Operation.ADD_NUMBER);
-        applyModifier(player, Attribute.ATTACK_KNOCKBACK, STR_KNOCKBACK_KEY, str >= 14 ? 1.0 : 0.0, AttributeModifier.Operation.ADD_NUMBER);
-        applyModifier(player, Attribute.ATTACK_SPEED, STR_ATTACK_SPEED_KEY, str >= 10 ? 16.0 : 0.0, AttributeModifier.Operation.ADD_NUMBER);
-        applyModifier(player, Attribute.MOVEMENT_SPEED, AGI_SPEED_KEY, 0.05 * agi, AttributeModifier.Operation.MULTIPLY_SCALAR_1);
-        applyModifier(player, Attribute.MAX_HEALTH, VIT_HEALTH_KEY, vit * 2.0, AttributeModifier.Operation.ADD_NUMBER);
-        var healthAttr = player.getAttribute(Attribute.MAX_HEALTH);
-        if (healthAttr != null && player.getHealth() > healthAttr.getValue()) {
-            player.setHealth(healthAttr.getValue());
+        for (StatType type : StatType.values()) {
+            type.apply(player, stats.get(type));
         }
     }
 }
