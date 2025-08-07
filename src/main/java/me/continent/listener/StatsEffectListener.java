@@ -19,8 +19,6 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.event.player.PlayerToggleFlightEvent;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.event.player.PlayerToggleSprintEvent;
 import org.bukkit.inventory.ItemStack;
@@ -34,8 +32,6 @@ import java.util.UUID;
 
 public class StatsEffectListener implements Listener {
     private static class DashState {
-        boolean jumped;
-        long lastJump;
         long lastTap;
         long cooldownUntil;
     }
@@ -190,17 +186,10 @@ public class StatsEffectListener implements Listener {
         player.sendActionBar(bar.toString());
     }
 
-    private double getDashSpeed(int agi, boolean jump) {
-        double base = jump ? 1.2 : 0.8;
+    private double getDashSpeed(int agi) {
+        double base = 0.8;
         int bonus = Math.max(0, Math.min(agi, 13) - 10);
         return base + 0.2 * bonus;
-    }
-
-    private long getJumpCooldown(int agi) {
-        if (agi >= 13) return 500;
-        if (agi >= 12) return 750;
-        if (agi >= 11) return 1000;
-        return 2000;
     }
 
     private void performDash(Player player, double speed, double vertical) {
@@ -208,49 +197,6 @@ public class StatsEffectListener implements Listener {
         player.setVelocity(dir);
         player.getWorld().spawnParticle(org.bukkit.Particle.CLOUD, player.getLocation(), 20, 0.3, 0.1, 0.3, 0);
         player.playSound(player.getLocation(), Sound.ENTITY_WIND_CHARGE_WIND_BURST, 1f, 1f);
-    }
-
-    @EventHandler
-    public void onMove(PlayerMoveEvent event) {
-        Player player = event.getPlayer();
-        PlayerStats stats = PlayerDataManager.get(player.getUniqueId()).getStats();
-        DashState state = getDashState(player);
-        if (player.isOnGround()) {
-            if (player.getGameMode() == GameMode.SURVIVAL) {
-                if (stats.get(StatType.AGILITY) >= 10) {
-                    player.setAllowFlight(true);
-                    state.jumped = false;
-                } else if (player.getAllowFlight()) {
-                    player.setAllowFlight(false);
-                }
-            }
-        }
-    }
-
-    @EventHandler
-    public void onToggleFlight(PlayerToggleFlightEvent event) {
-        Player player = event.getPlayer();
-        PlayerStats stats = PlayerDataManager.get(player.getUniqueId()).getStats();
-        if (stats.get(StatType.AGILITY) < 10 || player.getGameMode() != GameMode.SURVIVAL) return;
-
-        DashState state = getDashState(player);
-        if (!state.jumped) {
-            float fall = player.getFallDistance();
-            event.setCancelled(true);
-            long now = System.currentTimeMillis();
-            long cd = getJumpCooldown(stats.get(StatType.AGILITY));
-            double ratio = Math.min(1.0, (now - state.lastJump) / (double) cd);
-
-            player.setAllowFlight(false);
-            player.setFlying(false);
-            performDash(player, getDashSpeed(stats.get(StatType.AGILITY), true) * ratio, 0.6 * ratio);
-            startCooldownBar(player, cd);
-
-            state.jumped = true;
-            state.lastJump = now;
-            state.cooldownUntil = now + cd;
-            player.setFallDistance(fall);
-        }
     }
 
     @EventHandler
@@ -264,7 +210,7 @@ public class StatsEffectListener implements Listener {
         if (now - state.lastTap < 600) {
             if (now >= state.cooldownUntil) {
                 state.cooldownUntil = now + 2000;
-                performDash(player, getDashSpeed(stats.get(StatType.AGILITY), false), 0);
+                performDash(player, getDashSpeed(stats.get(StatType.AGILITY)), 0);
             }
         }
         state.lastTap = now;
@@ -293,10 +239,8 @@ public class StatsEffectListener implements Listener {
             int vit = stats.get(StatType.VITALITY);
             int agi = stats.get(StatType.AGILITY);
             if (event.getCause() == EntityDamageEvent.DamageCause.FALL) {
-                DashState state = getDashState(player);
-                state.jumped = false;
-                double raw = event.getDamage();
                 player.getFallDistance();
+                double raw = event.getDamage();
                 if (agi >= 10) {
                     event.setDamage(Math.max(0, raw - 3.0));
                 }
