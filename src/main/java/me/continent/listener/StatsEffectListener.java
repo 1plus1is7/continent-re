@@ -20,7 +20,6 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
-import org.bukkit.event.player.PlayerToggleSprintEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -31,16 +30,6 @@ import java.util.Map;
 import java.util.UUID;
 
 public class StatsEffectListener implements Listener {
-    private static class DashState {
-        long lastTap;
-        long cooldownUntil;
-    }
-
-    private final Map<UUID, DashState> dashStates = new HashMap<>();
-
-    private DashState getDashState(Player player) {
-        return dashStates.computeIfAbsent(player.getUniqueId(), k -> new DashState());
-    }
     private final Map<java.util.UUID, Long> dodgeCooldown = new HashMap<>();
     private final Map<java.util.UUID, Long> healCooldown = new HashMap<>();
     private final Map<java.util.UUID, Long> smashCooldown = new HashMap<>();
@@ -100,7 +89,6 @@ public class StatsEffectListener implements Listener {
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
         java.util.UUID id = event.getPlayer().getUniqueId();
-        dashStates.remove(id);
         dodgeCooldown.remove(id);
         healCooldown.remove(id);
         smashCooldown.remove(id);
@@ -149,72 +137,7 @@ public class StatsEffectListener implements Listener {
         }
     }
 
-    private void startCooldownBar(Player player, long cd) {
-        java.util.UUID id = player.getUniqueId();
-        org.bukkit.scheduler.BukkitTask old = staminaTasks.remove(id);
-        if (old != null) old.cancel();
-        org.bukkit.scheduler.BukkitRunnable runnable = new org.bukkit.scheduler.BukkitRunnable() {
-            final long start = System.currentTimeMillis();
-            @Override
-            public void run() {
-                if (!player.isOnline()) {
-                    this.cancel();
-                    staminaTasks.remove(id);
-                    return;
-                }
-                long elapsed = System.currentTimeMillis() - start;
-                if (elapsed >= cd) {
-                    player.sendActionBar("§a▮▮▮▮▮▮▮▮▮▮");
-                    this.cancel();
-                    staminaTasks.remove(id);
-                    return;
-                }
-                sendCooldownBar(player, elapsed, cd);
-            }
-        };
-        org.bukkit.scheduler.BukkitTask task = runnable.runTaskTimer(me.continent.ContinentPlugin.getInstance(), 0L, 2L);
-        staminaTasks.put(id, task);
-    }
 
-    private void sendCooldownBar(Player player, long elapsed, long total) {
-        double progress = elapsed / (double) total;
-        int filled = (int) Math.round(progress * 10);
-        StringBuilder bar = new StringBuilder("§a");
-        for (int i = 0; i < 10; i++) {
-            bar.append(i < filled ? '▮' : '▯');
-        }
-        player.sendActionBar(bar.toString());
-    }
-
-    private double getDashSpeed(int agi) {
-        double base = 0.8;
-        int bonus = Math.max(0, Math.min(agi, 13) - 10);
-        return base + 0.2 * bonus;
-    }
-
-    private void performDash(Player player, double speed, double vertical) {
-        Vector dir = player.getLocation().getDirection().setY(0).normalize().multiply(speed).setY(vertical);
-        player.setVelocity(dir);
-        player.getWorld().spawnParticle(org.bukkit.Particle.CLOUD, player.getLocation(), 20, 0.3, 0.1, 0.3, 0);
-        player.playSound(player.getLocation(), Sound.ENTITY_WIND_CHARGE_WIND_BURST, 1f, 1f);
-    }
-
-    @EventHandler
-    public void onToggleSprint(PlayerToggleSprintEvent event) {
-        Player player = event.getPlayer();
-        PlayerStats stats = PlayerDataManager.get(player.getUniqueId()).getStats();
-        if (stats.get(StatType.AGILITY) < 10 || player.getGameMode() != GameMode.SURVIVAL || !event.isSprinting()) return;
-
-        DashState state = getDashState(player);
-        long now = System.currentTimeMillis();
-        if (now - state.lastTap < 600) {
-            if (now >= state.cooldownUntil) {
-                state.cooldownUntil = now + 2000;
-                performDash(player, getDashSpeed(stats.get(StatType.AGILITY)), 0);
-            }
-        }
-        state.lastTap = now;
-    }
 
     @EventHandler
     public void onToggleSneak(PlayerToggleSneakEvent event) {
@@ -239,10 +162,11 @@ public class StatsEffectListener implements Listener {
             int vit = stats.get(StatType.VITALITY);
             int agi = stats.get(StatType.AGILITY);
             if (event.getCause() == EntityDamageEvent.DamageCause.FALL) {
-                player.getFallDistance();
                 double raw = event.getDamage();
                 if (agi >= 10) {
-                    event.setDamage(Math.max(0, raw - 3.0));
+                    double hearts = me.continent.ContinentPlugin.getInstance().getConfig().getDouble("stats.agility.fall_reduction_hearts", 3.0);
+                    double reduction = Math.max(0.0, hearts * 2.0);
+                    event.setDamage(Math.max(0.0, raw - reduction));
                 }
                 return;
             }
