@@ -160,16 +160,6 @@ public class StatsEffectListener implements Listener {
         if (event.getEntity() instanceof Player player) {
             PlayerStats stats = PlayerDataManager.get(player.getUniqueId()).getStats();
             int vit = stats.get(StatType.VITALITY);
-            int agi = stats.get(StatType.AGILITY);
-            if (event.getCause() == EntityDamageEvent.DamageCause.FALL) {
-                double raw = event.getDamage();
-                if (agi >= 10) {
-                    double hearts = me.continent.ContinentPlugin.getInstance().getConfig().getDouble("stats.agility.fall_reduction_hearts", 3.0);
-                    double reduction = Math.max(0.0, hearts * 2.0);
-                    event.setDamage(Math.max(0.0, raw - reduction));
-                }
-                return;
-            }
             if (vit >= 14) {
                 switch (event.getCause()) {
                     case FIRE, FIRE_TICK, LAVA, POISON, WITHER -> event.setDamage(event.getDamage() * 0.5);

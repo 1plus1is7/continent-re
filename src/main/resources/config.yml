@@ -26,6 +26,3 @@ season:
     SUMMER: {}
     AUTUMN: {}
     WINTER: {}
-stats:
-  agility:
-    fall_reduction_hearts: 3.0
