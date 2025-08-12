@@ -66,7 +66,7 @@ public class DashHandler implements Listener {
             public void run() {
                 double progress = (double) elapsed / totalTicks;
                 int bars = (int) Math.round(progress * 10);
-                String bar = "[" + "█".repeat(bars) + "░".repeat(10 - bars) + "]";
+                String bar = "[" + "■".repeat(bars) + "□".repeat(10 - bars) + "]";
                 player.sendActionBar(Component.text(bar));
 
                 if (elapsed++ >= totalTicks) {
