@@ -23,10 +23,12 @@ commands:
   specialty:
     description: Specialty goods command
     aliases: [spc]
-    usage: /specialty <subcommand>  
+    usage: /specialty <subcommand>
   admin:
-    description: Manage wars, economy, maintenance, scoreboard and config
-    usage: /admin <subcommand>
+    description: Admin commands
+    usage: /admin biome <reload|get>
+    aliases: [ad]
+    permission: continent.admin
   union:
     description: Manage unions of nations
     aliases: [u]
@@ -50,3 +52,7 @@ commands:
   continent:
     description: Continent management commands
     usage: /continent biome reload
+permissions:
+  continent.admin:
+    description: Continent admin permission
+    default: op
