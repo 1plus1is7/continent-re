@@ -67,6 +67,9 @@ public class AdminCommand implements TabExecutor {
                 sender.sendMessage("§fTags: " + String.join(", ", trait.tags()));
                 sender.sendMessage(String.format("§fbase_temp: %.1f, move_mult: %.2f, crop_rate: %.2f, crop_yield_rate: %.2f",
                         trait.baseTemp(), trait.moveMult(), trait.cropRate(), trait.cropYieldRate()));
+                String rules = trait.rules().stream().map(r -> r.type().name().toLowerCase()).reduce((a,b) -> a + ", " + b).orElse("none");
+                sender.sendMessage("§fRules: " + rules);
+                sender.sendMessage("§fTemp now: " + me.continent.temperature.PlayerTemperatureService.getTemperature(p));
                 return true;
             }
             sender.sendMessage("§c사용법: /admin biome <reload|get>");

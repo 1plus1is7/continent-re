@@ -21,6 +21,7 @@ import java.util.logging.Logger;
 public class BiomeTraitService {
     private static JavaPlugin plugin;
     private static volatile Map<Biome, BiomeTrait> ACTIVE_CACHE = Map.of();
+    private static final int WARN_LIMIT = 20;
 
     public static void init(JavaPlugin pl) {
         plugin = pl;
@@ -50,7 +51,7 @@ public class BiomeTraitService {
             long elapsed = System.currentTimeMillis() - start;
             Bukkit.getScheduler().runTask(plugin, () -> {
                 ACTIVE_CACHE = Collections.unmodifiableMap(result.cache());
-                sender.sendMessage("§a[Continent] Biome traits reloaded: " + result.loaded() + "/" + result.total() + " (skipped: " + result.skipped() + ")");
+                sender.sendMessage("§a[Continent] Biome traits reloaded: " + result.loaded() + "/" + result.total() + " (skipped: " + result.skipped() + ", warnings: " + result.warnings() + ") in " + elapsed + "ms");
                 if (result.warnings() > 0) {
                     sender.sendMessage("§e[Continent] Reload partial: warnings=" + result.warnings() + ", see console");
                 }
@@ -85,7 +86,7 @@ public class BiomeTraitService {
             try {
                 biome = Biome.valueOf(key.toUpperCase(Locale.ROOT));
             } catch (IllegalArgumentException ex) {
-                log.warning("Unknown biome: " + key);
+                if (warnings < WARN_LIMIT) log.warning("Unknown biome: " + key);
                 skipped++;
                 continue;
             }
@@ -119,14 +120,30 @@ public class BiomeTraitService {
                         try {
                             type = BiomeTrait.RuleType.valueOf(typeStr.toUpperCase(Locale.ROOT));
                         } catch (IllegalArgumentException ex) {
-                            log.warning("Unknown rule type: " + typeStr + " in " + key);
+                            if (warnings < WARN_LIMIT) log.warning("Unknown rule type: " + typeStr + " in " + key);
                             warnings++;
                             continue;
                         }
                         Map<String, Object> params = new HashMap<>();
-                        for (Map.Entry<?, ?> pe : map.entrySet()) {
-                            if (!"type".equals(pe.getKey())) {
-                                params.put(pe.getKey().toString(), pe.getValue());
+                        switch (type) {
+                            case LOW_LIGHT_SLOW -> {
+                                int lightMax = (int) getDouble((Map<String, Object>) map, "light_max", 5, 0, 15, log);
+                                double mult = getDouble((Map<String, Object>) map, "move_mult", 0.90, 0.1, 5.0, log);
+                                params.put("light_max", lightMax);
+                                params.put("move_mult", mult);
+                            }
+                            case LEATHER_IMMUNITY -> {
+                                // no params
+                            }
+                            case ELEVATION_TRADE_BONUS -> {
+                                int yMin = (int) getDouble((Map<String, Object>) map, "y_min", 100, 0, 256, log);
+                                int radius = (int) getDouble((Map<String, Object>) map, "radius", 200, 1, 500, log);
+                                double valMult = getDouble((Map<String, Object>) map, "value_mult", 1.0, 0.1, 5.0, log);
+                                String item = Objects.toString(map.get("item"), "sweet_berries");
+                                params.put("y_min", yMin);
+                                params.put("radius", radius);
+                                params.put("value_mult", valMult);
+                                params.put("item", item);
                             }
                         }
                         rules.add(new BiomeTrait.Rule(type, params));

@@ -62,6 +62,7 @@ import me.continent.command.ContinentCommand;
 import me.continent.market.pricing.DemandManager;
 import me.continent.market.pricing.MarketLogManager;
 import me.continent.market.pricing.PriceHistoryManager;
+import me.continent.movement.MovementListener;
 
 import java.io.File;
 
@@ -158,6 +159,7 @@ public class ContinentPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new JobMenuListener(), this);
         getServer().getPluginManager().registerEvents(new me.continent.listener.StatsEffectListener(), this);
         getServer().getPluginManager().registerEvents(new me.continent.listener.DashHandler(), this);
+        getServer().getPluginManager().registerEvents(new MovementListener(), this);
         getServer().getPluginManager().registerEvents(new me.continent.listener.StatLevelListener(), this);
         getServer().getPluginManager().registerEvents(new me.continent.listener.LuckDropListener(), this);
         getServer().getPluginManager().registerEvents(new PickpocketManager(), this);
