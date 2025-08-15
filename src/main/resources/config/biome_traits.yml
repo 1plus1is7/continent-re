@@ -1,4 +1,455 @@
-# Default biome traits configuration
+# Generated biome traits
+badlands:
+  base_temp: 20.0
+  move_mult: 1.0
+  crop_rate: 1.0
+  crop_yield_rate: 1.0
+  trade_deform:
+    food: 0.0
+    metal: 0.0
+    leather: 0.0
+    gem: 0.0
+  tags: []
+  special_rules: []
+
+bamboo_jungle:
+  base_temp: 20.0
+  move_mult: 1.0
+  crop_rate: 1.0
+  crop_yield_rate: 1.0
+  trade_deform:
+    food: 0.0
+    metal: 0.0
+    leather: 0.0
+    gem: 0.0
+  tags: []
+  special_rules: []
+
+beach:
+  base_temp: 20.0
+  move_mult: 1.0
+  crop_rate: 1.0
+  crop_yield_rate: 1.0
+  trade_deform:
+    food: 0.0
+    metal: 0.0
+    leather: 0.0
+    gem: 0.0
+  tags: []
+  special_rules: []
+
+birch_forest:
+  base_temp: 20.0
+  move_mult: 1.0
+  crop_rate: 1.0
+  crop_yield_rate: 1.0
+  trade_deform:
+    food: 0.0
+    metal: 0.0
+    leather: 0.0
+    gem: 0.0
+  tags: []
+  special_rules: []
+
+cherry_grove:
+  base_temp: 20.0
+  move_mult: 1.0
+  crop_rate: 1.0
+  crop_yield_rate: 1.0
+  trade_deform:
+    food: 0.0
+    metal: 0.0
+    leather: 0.0
+    gem: 0.0
+  tags: []
+  special_rules: []
+
+cold_ocean:
+  base_temp: 20.0
+  move_mult: 1.0
+  crop_rate: 1.0
+  crop_yield_rate: 1.0
+  trade_deform:
+    food: 0.0
+    metal: 0.0
+    leather: 0.0
+    gem: 0.0
+  tags: []
+  special_rules: []
+
+dark_forest:
+  base_temp: 20.0
+  move_mult: 1.0
+  crop_rate: 1.0
+  crop_yield_rate: 1.0
+  trade_deform:
+    food: 0.0
+    metal: 0.0
+    leather: 0.0
+    gem: 0.0
+  tags: []
+  special_rules:
+    - type: LOW_LIGHT_SLOW
+      light_max: 5
+      move_mult: 0.8
+    - type: LEATHER_IMMUNITY
+
+deep_cold_ocean:
+  base_temp: 20.0
+  move_mult: 1.0
+  crop_rate: 1.0
+  crop_yield_rate: 1.0
+  trade_deform:
+    food: 0.0
+    metal: 0.0
+    leather: 0.0
+    gem: 0.0
+  tags: []
+  special_rules: []
+
+deep_dark:
+  base_temp: 20.0
+  move_mult: 1.0
+  crop_rate: 1.0
+  crop_yield_rate: 1.0
+  trade_deform:
+    food: 0.0
+    metal: 0.0
+    leather: 0.0
+    gem: 0.0
+  tags: []
+  special_rules: []
+
+deep_frozen_ocean:
+  base_temp: 20.0
+  move_mult: 1.0
+  crop_rate: 1.0
+  crop_yield_rate: 1.0
+  trade_deform:
+    food: 0.0
+    metal: 0.0
+    leather: 0.0
+    gem: 0.0
+  tags: []
+  special_rules: []
+
+deep_lukewarm_ocean:
+  base_temp: 20.0
+  move_mult: 1.0
+  crop_rate: 1.0
+  crop_yield_rate: 1.0
+  trade_deform:
+    food: 0.0
+    metal: 0.0
+    leather: 0.0
+    gem: 0.0
+  tags: []
+  special_rules: []
+
+deep_ocean:
+  base_temp: 20.0
+  move_mult: 1.0
+  crop_rate: 1.0
+  crop_yield_rate: 1.0
+  trade_deform:
+    food: 0.0
+    metal: 0.0
+    leather: 0.0
+    gem: 0.0
+  tags: []
+  special_rules: []
+
+desert:
+  base_temp: 20.0
+  move_mult: 1.0
+  crop_rate: 1.0
+  crop_yield_rate: 1.0
+  trade_deform:
+    food: 0.0
+    metal: 0.0
+    leather: 0.0
+    gem: 0.0
+  tags: []
+  special_rules: []
+
+dripstone_caves:
+  base_temp: 20.0
+  move_mult: 1.0
+  crop_rate: 1.0
+  crop_yield_rate: 1.0
+  trade_deform:
+    food: 0.0
+    metal: 0.0
+    leather: 0.0
+    gem: 0.0
+  tags: []
+  special_rules: []
+
+eroded_badlands:
+  base_temp: 20.0
+  move_mult: 1.0
+  crop_rate: 1.0
+  crop_yield_rate: 1.0
+  trade_deform:
+    food: 0.0
+    metal: 0.0
+    leather: 0.0
+    gem: 0.0
+  tags: []
+  special_rules: []
+
+flower_forest:
+  base_temp: 20.0
+  move_mult: 1.0
+  crop_rate: 1.0
+  crop_yield_rate: 1.0
+  trade_deform:
+    food: 0.0
+    metal: 0.0
+    leather: 0.0
+    gem: 0.0
+  tags: []
+  special_rules: []
+
+forest:
+  base_temp: 20.0
+  move_mult: 1.0
+  crop_rate: 1.0
+  crop_yield_rate: 1.0
+  trade_deform:
+    food: 0.0
+    metal: 0.0
+    leather: 0.0
+    gem: 0.0
+  tags: []
+  special_rules: []
+
+frozen_ocean:
+  base_temp: 20.0
+  move_mult: 1.0
+  crop_rate: 1.0
+  crop_yield_rate: 1.0
+  trade_deform:
+    food: 0.0
+    metal: 0.0
+    leather: 0.0
+    gem: 0.0
+  tags: []
+  special_rules: []
+
+frozen_peaks:
+  base_temp: 20.0
+  move_mult: 1.0
+  crop_rate: 1.0
+  crop_yield_rate: 1.0
+  trade_deform:
+    food: 0.0
+    metal: 0.0
+    leather: 0.0
+    gem: 0.0
+  tags: []
+  special_rules: []
+
+frozen_river:
+  base_temp: 20.0
+  move_mult: 1.0
+  crop_rate: 1.0
+  crop_yield_rate: 1.0
+  trade_deform:
+    food: 0.0
+    metal: 0.0
+    leather: 0.0
+    gem: 0.0
+  tags: []
+  special_rules: []
+
+grove:
+  base_temp: 20.0
+  move_mult: 1.0
+  crop_rate: 1.0
+  crop_yield_rate: 1.0
+  trade_deform:
+    food: 0.0
+    metal: 0.0
+    leather: 0.0
+    gem: 0.0
+  tags: []
+  special_rules: []
+
+ice_spikes:
+  base_temp: 20.0
+  move_mult: 1.0
+  crop_rate: 1.0
+  crop_yield_rate: 1.0
+  trade_deform:
+    food: 0.0
+    metal: 0.0
+    leather: 0.0
+    gem: 0.0
+  tags: []
+  special_rules: []
+
+jagged_peaks:
+  base_temp: 20.0
+  move_mult: 1.0
+  crop_rate: 1.0
+  crop_yield_rate: 1.0
+  trade_deform:
+    food: 0.0
+    metal: 0.0
+    leather: 0.0
+    gem: 0.0
+  tags: []
+  special_rules:
+    - type: ELEVATION_TRADE_BONUS
+      y_min: 100
+      radius: 200
+      value_mult: 1.5
+      item: emerald
+
+jungle:
+  base_temp: 20.0
+  move_mult: 1.0
+  crop_rate: 1.0
+  crop_yield_rate: 1.0
+  trade_deform:
+    food: 0.0
+    metal: 0.0
+    leather: 0.0
+    gem: 0.0
+  tags: []
+  special_rules: []
+
+lukewarm_ocean:
+  base_temp: 20.0
+  move_mult: 1.0
+  crop_rate: 1.0
+  crop_yield_rate: 1.0
+  trade_deform:
+    food: 0.0
+    metal: 0.0
+    leather: 0.0
+    gem: 0.0
+  tags: []
+  special_rules: []
+
+lush_caves:
+  base_temp: 20.0
+  move_mult: 1.0
+  crop_rate: 1.0
+  crop_yield_rate: 1.0
+  trade_deform:
+    food: 0.0
+    metal: 0.0
+    leather: 0.0
+    gem: 0.0
+  tags: []
+  special_rules: []
+
+mangrove_swamp:
+  base_temp: 20.0
+  move_mult: 1.0
+  crop_rate: 1.0
+  crop_yield_rate: 1.0
+  trade_deform:
+    food: 0.0
+    metal: 0.0
+    leather: 0.0
+    gem: 0.0
+  tags: []
+  special_rules: []
+
+meadow:
+  base_temp: 20.0
+  move_mult: 1.0
+  crop_rate: 1.0
+  crop_yield_rate: 1.0
+  trade_deform:
+    food: 0.0
+    metal: 0.0
+    leather: 0.0
+    gem: 0.0
+  tags: []
+  special_rules: []
+
+mushroom_fields:
+  base_temp: 20.0
+  move_mult: 1.0
+  crop_rate: 1.0
+  crop_yield_rate: 1.0
+  trade_deform:
+    food: 0.0
+    metal: 0.0
+    leather: 0.0
+    gem: 0.0
+  tags: []
+  special_rules: []
+
+ocean:
+  base_temp: 20.0
+  move_mult: 1.0
+  crop_rate: 1.0
+  crop_yield_rate: 1.0
+  trade_deform:
+    food: 0.0
+    metal: 0.0
+    leather: 0.0
+    gem: 0.0
+  tags: []
+  special_rules: []
+
+old_growth_birch_forest:
+  base_temp: 20.0
+  move_mult: 1.0
+  crop_rate: 1.0
+  crop_yield_rate: 1.0
+  trade_deform:
+    food: 0.0
+    metal: 0.0
+    leather: 0.0
+    gem: 0.0
+  tags: []
+  special_rules: []
+
+old_growth_pine_taiga:
+  base_temp: 20.0
+  move_mult: 1.0
+  crop_rate: 1.0
+  crop_yield_rate: 1.0
+  trade_deform:
+    food: 0.0
+    metal: 0.0
+    leather: 0.0
+    gem: 0.0
+  tags: []
+  special_rules: []
+
+old_growth_spruce_taiga:
+  base_temp: 20.0
+  move_mult: 1.0
+  crop_rate: 1.0
+  crop_yield_rate: 1.0
+  trade_deform:
+    food: 0.0
+    metal: 0.0
+    leather: 0.0
+    gem: 0.0
+  tags: []
+  special_rules: []
+
+pale_garden:
+  base_temp: 20.0
+  move_mult: 1.0
+  crop_rate: 1.0
+  crop_yield_rate: 1.0
+  trade_deform:
+    food: 0.0
+    metal: 0.0
+    leather: 0.0
+    gem: 0.0
+  tags: []
+  special_rules: []
+
 plains:
   base_temp: 20.0
   move_mult: 1.0
@@ -9,16 +460,253 @@ plains:
     metal: 0.0
     leather: 0.0
     gem: 0.0
-  tags: [temperate]
+  tags: []
+  special_rules: []
 
-desert:
-  base_temp: 35.0
+river:
+  base_temp: 20.0
   move_mult: 1.0
   crop_rate: 1.0
   crop_yield_rate: 1.0
   trade_deform:
-    food: 0.2
+    food: 0.0
     metal: 0.0
-    leather: -0.1
+    leather: 0.0
     gem: 0.0
-  tags: [arid]
+  tags: []
+  special_rules: []
+
+savanna:
+  base_temp: 20.0
+  move_mult: 1.0
+  crop_rate: 1.0
+  crop_yield_rate: 1.0
+  trade_deform:
+    food: 0.0
+    metal: 0.0
+    leather: 0.0
+    gem: 0.0
+  tags: []
+  special_rules: []
+
+savanna_plateau:
+  base_temp: 20.0
+  move_mult: 1.0
+  crop_rate: 1.0
+  crop_yield_rate: 1.0
+  trade_deform:
+    food: 0.0
+    metal: 0.0
+    leather: 0.0
+    gem: 0.0
+  tags: []
+  special_rules: []
+
+snowy_beach:
+  base_temp: 20.0
+  move_mult: 1.0
+  crop_rate: 1.0
+  crop_yield_rate: 1.0
+  trade_deform:
+    food: 0.0
+    metal: 0.0
+    leather: 0.0
+    gem: 0.0
+  tags: []
+  special_rules: []
+
+snowy_plains:
+  base_temp: 20.0
+  move_mult: 1.0
+  crop_rate: 1.0
+  crop_yield_rate: 1.0
+  trade_deform:
+    food: 0.0
+    metal: 0.0
+    leather: 0.0
+    gem: 0.0
+  tags: []
+  special_rules: []
+
+snowy_slopes:
+  base_temp: 20.0
+  move_mult: 1.0
+  crop_rate: 1.0
+  crop_yield_rate: 1.0
+  trade_deform:
+    food: 0.0
+    metal: 0.0
+    leather: 0.0
+    gem: 0.0
+  tags: []
+  special_rules: []
+
+snowy_taiga:
+  base_temp: 20.0
+  move_mult: 1.0
+  crop_rate: 1.0
+  crop_yield_rate: 1.0
+  trade_deform:
+    food: 0.0
+    metal: 0.0
+    leather: 0.0
+    gem: 0.0
+  tags: []
+  special_rules: []
+
+sparse_jungle:
+  base_temp: 20.0
+  move_mult: 1.0
+  crop_rate: 1.0
+  crop_yield_rate: 1.0
+  trade_deform:
+    food: 0.0
+    metal: 0.0
+    leather: 0.0
+    gem: 0.0
+  tags: []
+  special_rules: []
+
+stony_peaks:
+  base_temp: 20.0
+  move_mult: 1.0
+  crop_rate: 1.0
+  crop_yield_rate: 1.0
+  trade_deform:
+    food: 0.0
+    metal: 0.0
+    leather: 0.0
+    gem: 0.0
+  tags: []
+  special_rules: []
+
+stony_shore:
+  base_temp: 20.0
+  move_mult: 1.0
+  crop_rate: 1.0
+  crop_yield_rate: 1.0
+  trade_deform:
+    food: 0.0
+    metal: 0.0
+    leather: 0.0
+    gem: 0.0
+  tags: []
+  special_rules: []
+
+sunflower_plains:
+  base_temp: 20.0
+  move_mult: 1.0
+  crop_rate: 1.0
+  crop_yield_rate: 1.0
+  trade_deform:
+    food: 0.0
+    metal: 0.0
+    leather: 0.0
+    gem: 0.0
+  tags: []
+  special_rules: []
+
+swamp:
+  base_temp: 20.0
+  move_mult: 1.0
+  crop_rate: 1.0
+  crop_yield_rate: 1.0
+  trade_deform:
+    food: 0.0
+    metal: 0.0
+    leather: 0.0
+    gem: 0.0
+  tags: []
+  special_rules: []
+
+taiga:
+  base_temp: 20.0
+  move_mult: 1.0
+  crop_rate: 1.0
+  crop_yield_rate: 1.0
+  trade_deform:
+    food: 0.0
+    metal: 0.0
+    leather: 0.0
+    gem: 0.0
+  tags: []
+  special_rules: []
+
+warm_ocean:
+  base_temp: 20.0
+  move_mult: 1.0
+  crop_rate: 1.0
+  crop_yield_rate: 1.0
+  trade_deform:
+    food: 0.0
+    metal: 0.0
+    leather: 0.0
+    gem: 0.0
+  tags: []
+  special_rules: []
+
+windswept_forest:
+  base_temp: 20.0
+  move_mult: 1.0
+  crop_rate: 1.0
+  crop_yield_rate: 1.0
+  trade_deform:
+    food: 0.0
+    metal: 0.0
+    leather: 0.0
+    gem: 0.0
+  tags: []
+  special_rules: []
+
+windswept_gravelly_hills:
+  base_temp: 20.0
+  move_mult: 1.0
+  crop_rate: 1.0
+  crop_yield_rate: 1.0
+  trade_deform:
+    food: 0.0
+    metal: 0.0
+    leather: 0.0
+    gem: 0.0
+  tags: []
+  special_rules: []
+
+windswept_hills:
+  base_temp: 20.0
+  move_mult: 1.0
+  crop_rate: 1.0
+  crop_yield_rate: 1.0
+  trade_deform:
+    food: 0.0
+    metal: 0.0
+    leather: 0.0
+    gem: 0.0
+  tags: []
+  special_rules: []
+
+windswept_savanna:
+  base_temp: 20.0
+  move_mult: 1.0
+  crop_rate: 1.0
+  crop_yield_rate: 1.0
+  trade_deform:
+    food: 0.0
+    metal: 0.0
+    leather: 0.0
+    gem: 0.0
+  tags: []
+  special_rules: []
+
+wooded_badlands:
+  base_temp: 20.0
+  move_mult: 1.0
+  crop_rate: 1.0
+  crop_yield_rate: 1.0
+  trade_deform:
+    food: 0.0
+    metal: 0.0
+    leather: 0.0
+    gem: 0.0
+  tags: []
+  special_rules: []
+

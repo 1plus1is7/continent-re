@@ -61,18 +61,25 @@ public class AdminCommand implements TabExecutor {
                 BiomeTraitService.reloadAsync(sender);
                 return true;
             }
-            if (args.length >= 2 && args[1].equalsIgnoreCase("get") && sender instanceof org.bukkit.entity.Player p) {
+            if (args.length >= 2 && args[1].equalsIgnoreCase("get")) {
+                if (!(sender instanceof org.bukkit.entity.Player p)) {
+                    sender.sendMessage("§c[Continent] Player only");
+                    return true;
+                }
                 var trait = BiomeTraitService.get(p);
-                sender.sendMessage("§6[Biome] §f" + p.getLocation().getBlock().getBiome().name().toLowerCase());
-                sender.sendMessage("§fTags: " + String.join(", ", trait.tags()));
-                sender.sendMessage(String.format("§fbase_temp: %.1f, move_mult: %.2f, crop_rate: %.2f, crop_yield_rate: %.2f",
+                String biomeName = p.getLocation().getBlock().getBiome().name();
+                String tags = trait.tags().isEmpty() ? "-" : String.join(",", trait.tags());
+                sender.sendMessage("§6[Continent] Biome: §e" + biomeName + " §7tags=" + tags);
+                sender.sendMessage(String.format("§6[Continent] base_temp=§e%.1f §6move_mult=§e%.2f §6crop_rate=§e%.2f §6crop_yield_rate=§e%.2f",
                         trait.baseTemp(), trait.moveMult(), trait.cropRate(), trait.cropYieldRate()));
-                String rules = trait.rules().stream().map(r -> r.type().name().toLowerCase()).reduce((a,b) -> a + ", " + b).orElse("none");
-                sender.sendMessage("§fRules: " + rules);
-                sender.sendMessage("§fTemp now: " + me.continent.temperature.PlayerTemperatureService.getTemperature(p));
+                if (!trait.rules().isEmpty()) {
+                    String ruleList = String.join(",", trait.rules().stream()
+                            .map(r -> r.type().name().toLowerCase()).toList());
+                    sender.sendMessage("§6[Continent] rules: §f" + ruleList);
+                }
                 return true;
             }
-            sender.sendMessage("§c사용법: /admin biome <reload|get>");
+            sender.sendMessage("§c[Continent] 사용법: /admin biome <reload|get>");
             return true;
         }
 

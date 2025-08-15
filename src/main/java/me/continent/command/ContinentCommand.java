@@ -13,11 +13,10 @@ public class ContinentCommand implements TabExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if (args.length >= 2 && args[0].equalsIgnoreCase("biome") && args[1].equalsIgnoreCase("reload")) {
-            BiomeTraitService.reload();
-            sender.sendMessage("§aBiome traits reloaded");
+            BiomeTraitService.reloadAsync(sender);
             return true;
         }
-        sender.sendMessage("§cUsage: /continent biome reload");
+        sender.sendMessage("§c[Continent] Usage: /continent biome reload");
         return true;
     }
 
