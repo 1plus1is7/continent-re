@@ -1,0 +1,24 @@
+# Default biome traits configuration
+plains:
+  base_temp: 20.0
+  move_mult: 1.0
+  crop_rate: 1.0
+  crop_yield_rate: 1.0
+  trade_deform:
+    food: 0.0
+    metal: 0.0
+    leather: 0.0
+    gem: 0.0
+  tags: [temperate]
+
+desert:
+  base_temp: 35.0
+  move_mult: 1.0
+  crop_rate: 1.0
+  crop_yield_rate: 1.0
+  trade_deform:
+    food: 0.2
+    metal: 0.0
+    leather: -0.1
+    gem: 0.0
+  tags: [arid]

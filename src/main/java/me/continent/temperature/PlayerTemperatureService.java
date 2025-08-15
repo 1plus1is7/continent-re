@@ -30,7 +30,7 @@ public class PlayerTemperatureService implements Runnable {
     }
 
     public static float getTemperature(Player player) {
-        return temps.getOrDefault(player.getUniqueId(), BiomeTraitService.getBaseTemp(player.getLocation()));
+        return temps.getOrDefault(player.getUniqueId(), BiomeTraitService.get(player).baseTemp());
     }
 
     @Override
@@ -54,7 +54,7 @@ public class PlayerTemperatureService implements Runnable {
     }
 
     private float calculateTemp(Player player) {
-        float base = BiomeTraitService.getBaseTemp(player.getLocation());
+        float base = BiomeTraitService.get(player).baseTemp();
         // TODO weather, indoor/outdoor, armor, potion effects
         return base;
     }
