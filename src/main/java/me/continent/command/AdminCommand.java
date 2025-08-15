@@ -11,6 +11,7 @@ import me.continent.player.PlayerDataManager;
 import me.continent.stat.PlayerStats;
 import me.continent.scoreboard.ScoreboardService;
 import me.continent.ContinentPlugin;
+import me.continent.biome.BiomeTraitService;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -52,6 +53,23 @@ public class AdminCommand implements TabExecutor {
             sender.sendMessage("§e/admin config get <경로> §7- 설정값 확인");
             sender.sendMessage("§e/admin config set <경로> <값> §7- 설정값 변경");
             sender.sendMessage("§e/admin reload §7- 플러그인 설정 다시 불러오기");
+            return true;
+        }
+
+        if (args[0].equalsIgnoreCase("biome")) {
+            if (args.length >= 2 && args[1].equalsIgnoreCase("reload")) {
+                BiomeTraitService.reloadAsync(sender);
+                return true;
+            }
+            if (args.length >= 2 && args[1].equalsIgnoreCase("get") && sender instanceof org.bukkit.entity.Player p) {
+                var trait = BiomeTraitService.get(p);
+                sender.sendMessage("§6[Biome] §f" + p.getLocation().getBlock().getBiome().name().toLowerCase());
+                sender.sendMessage("§fTags: " + String.join(", ", trait.tags()));
+                sender.sendMessage(String.format("§fbase_temp: %.1f, move_mult: %.2f, crop_rate: %.2f, crop_yield_rate: %.2f",
+                        trait.baseTemp(), trait.moveMult(), trait.cropRate(), trait.cropYieldRate()));
+                return true;
+            }
+            sender.sendMessage("§c사용법: /admin biome <reload|get>");
             return true;
         }
 
@@ -343,7 +361,7 @@ public class AdminCommand implements TabExecutor {
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         if (args.length == 1) {
-            return Arrays.asList("war", "rate", "maintenance", "config", "scoreboard", "stat", "reload").stream()
+            return Arrays.asList("war", "rate", "maintenance", "config", "scoreboard", "stat", "reload", "biome").stream()
                     .filter(s -> s.startsWith(args[0].toLowerCase()))
                     .toList();
         }
@@ -358,6 +376,12 @@ public class AdminCommand implements TabExecutor {
             return NationManager.getAll().stream()
                     .map(Nation::getName)
                     .filter(n -> n.toLowerCase().startsWith(args[2].toLowerCase()))
+                    .toList();
+        }
+
+        if (args.length == 2 && args[0].equalsIgnoreCase("biome")) {
+            return Arrays.asList("reload", "get").stream()
+                    .filter(s -> s.startsWith(args[1].toLowerCase()))
                     .toList();
         }
 
