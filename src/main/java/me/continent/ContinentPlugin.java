@@ -55,10 +55,10 @@ import me.continent.research.ResearchManager;
 import me.continent.specialty.SpecialtyManager;
 import me.continent.specialty.SpecialtyListener;
 import me.continent.nation.service.NationSpecialtyListener;
-import me.continent.season.SeasonManager;
-import me.continent.season.SeasonWeatherTask;
-import me.continent.season.WinterFreezeTask;
-import me.continent.season.SeasonGrowthListener;
+import me.continent.biome.BiomeTraitService;
+import me.continent.temperature.PlayerTemperatureService;
+import me.continent.command.TempCommand;
+import me.continent.command.ContinentCommand;
 import me.continent.market.pricing.DemandManager;
 import me.continent.market.pricing.MarketLogManager;
 import me.continent.market.pricing.PriceHistoryManager;
@@ -90,6 +90,8 @@ public class ContinentPlugin extends JavaPlugin {
         registerCommand("enterprise", new EnterpriseCommand());
         registerCommand("job", new JobCommand());
         registerCommand("stat", new me.continent.command.StatCommand());
+        registerCommand("temp", new TempCommand());
+        registerCommand("continent", new ContinentCommand());
 
         // 중앙은행 데이터 로딩
         CentralBankDataManager.load();
@@ -107,9 +109,8 @@ public class ContinentPlugin extends JavaPlugin {
 
         CropGrowthManager.init(this);
 
-        SeasonManager.init(this);
-        SeasonWeatherTask.start(this);
-        WinterFreezeTask.start(this);
+        BiomeTraitService.init(this);
+        PlayerTemperatureService.start(this);
 
         ScoreboardService.schedule();
 
@@ -160,8 +161,6 @@ public class ContinentPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new me.continent.listener.StatLevelListener(), this);
         getServer().getPluginManager().registerEvents(new me.continent.listener.LuckDropListener(), this);
         getServer().getPluginManager().registerEvents(new PickpocketManager(), this);
-        getServer().getPluginManager().registerEvents(new SeasonGrowthListener(), this);
-
 
         getServer().getPluginManager().registerEvents(new MarketListener(), this);
 
@@ -196,6 +195,7 @@ public class ContinentPlugin extends JavaPlugin {
         plugin.reloadConfig();
         translateColorCodes(plugin.getConfig());
         MaintenanceService.init(plugin.getConfig());
+        BiomeTraitService.reload();
         Bukkit.getOnlinePlayers().forEach(ScoreboardService::update);
         plugin.getLogger().info("Configuration reloaded");
     }

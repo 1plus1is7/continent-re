@@ -36,14 +36,7 @@ public class GuideCommand implements TabExecutor {
                 "§l전쟁 진행\n- /war status 로 전황 확인\n- 코어 파괴 또는 /war surrender 로 종료",
                 "§l전쟁 중 특징\n- 적 영토 파괴와 코어 공격 허용\n- 코어 파괴 시 패배",
                 "추가 정보는 /admin war list|info 명령으로 확인 가능합니다."
-        ));
-
-        GUIDES.put("season", Arrays.asList(
-                "Continent 계절 가이드\n\n서버는 2025년 1월 1일 기준으로 14일마다 봄→여름→가을→겨울 순으로 변합니다.",
-                "§l작물 성장\n- 봄: 20% 확률로 두 번 성장\n- 여름: 정상\n- 가을: 20% 확률로 성장 취소\n- 겨울: 50% 확률로 성장 취소",
-                "§l날씨와 환경\n- 봄: 40% 비\n- 여름: 30% 폭우\n- 가을: 20% 약한 비\n- 겨울: 30% 눈과 주변 물 얼음 (10분 후 해동)"
-        ));
-    }
+        ));    }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player player)) {
@@ -56,7 +49,6 @@ public class GuideCommand implements TabExecutor {
             player.sendMessage("§e/guide kingdom §7- 국가 시스템");
             player.sendMessage("§e/guide nation §7- 국가 시스템");
             player.sendMessage("§e/guide war §7- 전쟁 시스템");
-            player.sendMessage("§e/guide season §7- 계절 시스템");
             return true;
         }
 
