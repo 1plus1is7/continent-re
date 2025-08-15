@@ -1,6 +1,7 @@
 package me.continent.crop;
 
 import me.continent.ContinentPlugin;
+import me.continent.biome.BiomeTraitService;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -58,7 +59,7 @@ public class CropGrowthManager {
         while (it.hasNext()) {
             Map.Entry<Location, CropData> entry = it.next();
             CropData data = entry.getValue();
-            double days = requiredDays(data.type);
+            double days = requiredDays(data.type, data.location);
             long totalMs = (long) (days * 1200_000L); // 1 day = 20min
             if (now - data.start >= totalMs) {
                 Block block = data.location.getBlock();
@@ -84,7 +85,7 @@ public class CropGrowthManager {
             if (target == null) continue;
             CropData data = crops.get(target.getLocation());
             if (data == null) continue;
-            double days = requiredDays(data.type);
+            double days = requiredDays(data.type, data.location);
             long totalMs = (long) (days * 1200_000L);
             long remain = totalMs - (now - data.start);
             if (remain < 0) remain = 0;
@@ -93,8 +94,12 @@ public class CropGrowthManager {
         }
     }
 
-    private static double requiredDays(CropType type) {
-        return type.getBaseDays();
+    private static double requiredDays(CropType type, Location loc) {
+        double baseDays = type.getBaseDays();
+        float rate = BiomeTraitService.get(loc).cropRate();
+        rate = Math.max(0.1f, Math.min(5.0f, rate));
+        // 바이옴 간 성장 시간 비교 테스트 포인트
+        return baseDays / rate;
     }
 
     private static String formatTime(long ms) {
