@@ -8,7 +8,6 @@ import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
-import org.bukkit.Location;
 
 import me.continent.ContinentPlugin;
 import java.util.HashMap;
@@ -54,15 +53,11 @@ public class WarBossBarManager {
     }
 
     private static void tick() {
-        for (Map.Entry<String, BossBar> entry : bars.entrySet()) {
-            String nationName = entry.getKey().substring(entry.getKey().indexOf(":") + 1);
-            Nation nation = NationManager.getByName(nationName);
-            if (nation == null) continue;
-            Location core = nation.getCoreLocation();
-            if (core == null) continue;
-            BossBar bar = entry.getValue();
+        for (BossBar bar : bars.values()) {
             for (Player p : Bukkit.getOnlinePlayers()) {
-                bar.addPlayer(p);
+                if (!bar.getPlayers().contains(p)) {
+                    bar.addPlayer(p);
+                }
             }
         }
     }

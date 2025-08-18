@@ -86,19 +86,27 @@ public class CoreAttackListener implements Listener {
         Nation nation = NationManager.getByName(tag.substring("core_slime:".length()));
         if (nation == null) return;
         Entity damager = event.getDamager();
-        Player attacker;
+        Player attacker = null;
         if (damager instanceof Player p) {
             attacker = p;
         } else if (damager instanceof Projectile proj && proj.getShooter() instanceof Player p) {
             attacker = p;
         } else if (damager instanceof TNTPrimed tnt && tnt.getSource() instanceof Player p) {
             attacker = p;
-        } else {
-            return;
         }
 
-        Nation attackerNation = NationManager.getByPlayer(attacker.getUniqueId());
-        if (attackerNation == null) return;
+        Nation attackerNation;
+        if (attacker != null) {
+            attackerNation = NationManager.getByPlayer(attacker.getUniqueId());
+            if (attackerNation == null) return;
+        } else {
+            War war = WarManager.getWar(nation.getName());
+            if (war == null) return;
+            String oppName = war.getAttacker().equalsIgnoreCase(nation.getName())
+                    ? war.getDefender() : war.getAttacker();
+            attackerNation = NationManager.getByName(oppName);
+            if (attackerNation == null) return;
+        }
 
         // Prevent friendly fire on a nation's own core
         if (attackerNation.getName().equalsIgnoreCase(nation.getName())) return;
