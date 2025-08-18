@@ -52,6 +52,9 @@ commands:
   continent:
     description: Continent management commands
     usage: /continent biome reload
+  rainfeel:
+    description: Rain feeling system command
+    usage: /rainfeel reload
 permissions:
   continent.admin:
     description: Continent admin permission

@@ -63,6 +63,7 @@ import me.continent.market.pricing.DemandManager;
 import me.continent.market.pricing.MarketLogManager;
 import me.continent.market.pricing.PriceHistoryManager;
 import me.continent.movement.MovementListener;
+import me.continent.rainfeel.RainFeelService;
 
 import java.io.File;
 
@@ -93,6 +94,7 @@ public class ContinentPlugin extends JavaPlugin {
         registerCommand("stat", new me.continent.command.StatCommand());
         registerCommand("temp", new TempCommand());
         registerCommand("continent", new ContinentCommand());
+        registerCommand("rainfeel", new me.continent.command.RainFeelCommand());
 
         // 중앙은행 데이터 로딩
         CentralBankDataManager.load();
@@ -165,6 +167,7 @@ public class ContinentPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new PickpocketManager(), this);
 
         getServer().getPluginManager().registerEvents(new MarketListener(), this);
+        RainFeelService.init(this);
 
         getLogger().info("Continent 플러그인 활성화됨");
     }
@@ -184,6 +187,7 @@ public class ContinentPlugin extends JavaPlugin {
         PriceHistoryManager.save(new File(getDataFolder(), "price_history.yml"));
 
         CropGrowthManager.shutdown();
+        RainFeelService.shutdown();
 
         getLogger().info("Continent 플러그인 비활성화됨");
     }
