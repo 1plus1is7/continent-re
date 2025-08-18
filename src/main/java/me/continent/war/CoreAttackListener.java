@@ -6,7 +6,10 @@ import me.continent.nation.NationManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
+import org.bukkit.entity.TNTPrimed;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -82,7 +85,18 @@ public class CoreAttackListener implements Listener {
         if (tag == null) return;
         Nation nation = NationManager.getByName(tag.substring("core_slime:".length()));
         if (nation == null) return;
-        if (!(event.getDamager() instanceof Player attacker)) return;
+        Entity damager = event.getDamager();
+        Player attacker;
+        if (damager instanceof Player p) {
+            attacker = p;
+        } else if (damager instanceof Projectile proj && proj.getShooter() instanceof Player p) {
+            attacker = p;
+        } else if (damager instanceof TNTPrimed tnt && tnt.getSource() instanceof Player p) {
+            attacker = p;
+        } else {
+            return;
+        }
+
         Nation attackerNation = NationManager.getByPlayer(attacker.getUniqueId());
         if (attackerNation == null) return;
 
