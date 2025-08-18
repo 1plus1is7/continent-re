@@ -4,6 +4,7 @@ import me.continent.ContinentPlugin;
 import me.continent.nation.Nation;
 import me.continent.nation.NationManager;
 import me.continent.player.PlayerDataManager;
+import me.continent.temperature.PlayerTemperatureService;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.World;
@@ -49,6 +50,9 @@ public class ScoreboardService {
 
         double gold = PlayerDataManager.get(uuid).getGold();
         lines.add("크라운: " + String.format("%.2f", gold) + "C");
+
+        float temp = PlayerTemperatureService.getTemperature(player);
+        lines.add("체온: " + String.format("%.1f℃", temp));
 
         if (showCoordinates) {
             int x = player.getLocation().getBlockX();

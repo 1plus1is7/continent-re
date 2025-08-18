@@ -18,3 +18,30 @@ lobby-world: "lobby"
 land-world: "world"
 war:
   declare-cost: 0
+rainfeel:
+  enabled: true
+  biome-mode: "blacklist"
+  biomes: ["DESERT","BADLANDS","ERODED_BADLANDS","SAVANNA"]
+  outdoor-check:
+    method: "highest_block"
+    allow-under-leaves: false
+  speed:
+    base-multiplier: 0.92
+    sprint-multiplier: 0.95
+    build_up_per_tick: 0.02
+    decay_per_tick: 0.05
+  slippery:
+    enabled: true
+    friction: 0.984
+    input-boost: 0.018
+    sprint-mult: 1.12
+    max-speed: 0.60
+    min-threshold: 0.025
+    slide-bias: 0.08
+  exclude:
+    sneaking: true
+    swimming: true
+    flying: true
+    riding: true
+    climbing: true
+    elytra: true
