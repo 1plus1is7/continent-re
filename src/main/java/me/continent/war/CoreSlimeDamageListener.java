@@ -25,12 +25,12 @@ public class CoreSlimeDamageListener implements Listener {
         if (!(event.getEntity() instanceof Slime slime)) return;
         if (!isCoreSlime(slime)) return;
 
-        // Allow damage from players, their projectiles, or TNT they ignited
+        // Allow damage from players, projectiles, or TNT regardless of source
         if (event instanceof EntityDamageByEntityEvent byEntity) {
             Entity damager = byEntity.getDamager();
-            if (damager instanceof Player) return;
-            if (damager instanceof Projectile proj && proj.getShooter() instanceof Player) return;
-            if (damager instanceof TNTPrimed tnt && tnt.getSource() instanceof Player) return;
+            if (damager instanceof Player || damager instanceof Projectile || damager instanceof TNTPrimed) {
+                return;
+            }
         }
         event.setCancelled(true);
     }
