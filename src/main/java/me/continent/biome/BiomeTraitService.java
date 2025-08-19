@@ -183,15 +183,19 @@ public class BiomeTraitService {
     }
 
     public static BiomeTrait get(Player player) {
+        if (player == null) return BiomeTrait.DEFAULT;
         return get(player.getLocation());
     }
 
     public static BiomeTrait get(Location loc) {
+        if (loc == null || loc.getWorld() == null) return BiomeTrait.DEFAULT;
         return get(loc.getBlock().getBiome());
     }
 
     public static BiomeTrait get(Biome biome) {
-        return ACTIVE_CACHE.getOrDefault(biome, BiomeTrait.DEFAULT);
+        if (biome == null) return BiomeTrait.DEFAULT;
+        BiomeTrait trait = ACTIVE_CACHE.get(biome);
+        return trait != null ? trait : BiomeTrait.DEFAULT;
     }
 
     private record LoadResult(Map<Biome, BiomeTrait> cache, int loaded, int total, int skipped, int warnings) {
