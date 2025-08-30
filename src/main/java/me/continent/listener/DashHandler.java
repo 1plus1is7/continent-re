@@ -57,6 +57,7 @@ public class DashHandler implements Listener {
     private void startCooldown(Player player, UUID id) {
         dashCooldown.add(id);
         player.setAllowFlight(false);
+        player.setFlying(false);
 
         final long totalTicks = COOLDOWN_MS / 50;
         new BukkitRunnable() {
@@ -74,6 +75,7 @@ public class DashHandler implements Listener {
                     player.sendActionBar(Component.empty());
                     if (player.isOnGround()) {
                         player.setAllowFlight(true);
+                        player.setFlying(false);
                     }
                     cancel();
                 }
@@ -91,6 +93,7 @@ public class DashHandler implements Listener {
 
         if (player.isOnGround() && !dashCooldown.contains(player.getUniqueId())) {
             player.setAllowFlight(true);
+            player.setFlying(false);
         }
     }
 
